@@ -1,0 +1,95 @@
+/* Login Page Background & Alignment */
+.login-body {
+    background: linear-gradient(rgba(20, 50, 18, 0.85), rgba(20, 50, 18, 0.85)), url('/images/leaves-bg.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 440px;
+}
+
+/* Header inside Login */
+.login-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-align: left;
+}
+
+.login-emblem {
+    width: 48px;
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
+.login-header-text .title-si {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.login-header-text .title-en {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin: 1px 0;
+    color: #e2f0d9;
+}
+
+.login-header-text .title-ta {
+    font-size: 0.7rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Card Styling */
+.login-card {
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+}
+
+.login-logo {
+    width: 130px;
+    height: auto;
+}
+
+.text-success-dark {
+    color: #1b4318;
+}
+
+/* Form Controls Customization */
+.form-control:focus {
+    box-shadow: none;
+    border-color: #2e6b26;
+}
+
+.input-group-text {
+    border-color: #dee2e6;
+}
+
+.btn-success-custom {
+    background: linear-gradient(135deg, #1b4318, #2e6b26);
+    border: none;
+    color: #ffffff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-success-custom:hover {
+    background: linear-gradient(135deg, #143312, #24541e);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(27, 67, 24, 0.3);
+}

@@ -1,0 +1,177 @@
+body {
+    background: linear-gradient(rgba(247,238,207,0.92), rgba(247,238,207,0.92)), url('/images/leaves-bg.png');
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+}
+
+/* Header Section */
+.top-header {
+    background: linear-gradient(135deg, #1b4318, #2e6b26);
+    color: white;
+    padding: 12px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.header-wrapper {
+    min-height: 70px;
+}
+
+/* Logo Fixes */
+.emblem-img {
+    width: 65px;
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    object-fit: contain;
+}
+
+/* Titles Fixes */
+.department-text {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title-si {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.title-en {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 2px 0;
+    color: #e2f0d9;
+}
+
+.title-ta {
+    font-size: 0.8rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Nav Links */
+.nav-link-custom {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.nav-link-custom:hover,
+.nav-link-custom.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Actions Section */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.language-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.language-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.login-btn {
+    background: #ffffff;
+    color: #1b4318;
+    padding: 8px 24px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+.login-btn:hover {
+    background: #e8f5e9;
+    color: #1b4318;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 60px 0;
+}
+
+.welcome-text {
+    color: #1b4318;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 700;
+}
+
+.sub-text {
+    font-size: 1.1rem;
+    color: #4a5568;
+    margin-bottom: 30px;
+}
+
+.main-logo {
+    width: min(400px, 85vw);
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.main-logo:hover {
+    transform: translateY(-5px);
+}
+
+.site-footer {
+    text-align: center;
+    padding: 15px;
+    background: #1b4318;
+    color: #d1e7dd;
+    font-size: 0.9rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .header-wrapper {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .department-text {
+        text-align: center;
+    }
+
+    .emblem-img {
+        width: 50px;
+    }
+
+    .title-si { font-size: 1rem; }
+    .title-en { font-size: 0.85rem; }
+    .title-ta { font-size: 0.75rem; }
+}
