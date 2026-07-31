@@ -11,32 +11,69 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\KitchenTicketController;
 use App\Http\Controllers\QueueDisplayController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+
 
 Route::get('/', function () {
+
     return view('index');
+
 });
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+
+// Admin Dashboard
+
+Route::get('/admin-dashboard', function () {
+
+    return view('admin.dashboard');
+
 })
-->middleware(['auth', 'verified'])
+->middleware('auth');
+
+
+
+
+// Cashier Dashboard
+
+Route::get('/cashier-dashboard', function () {
+
+    return view('cashier.dashboard');
+
+})
+->middleware('auth');
+
+
+
+
+// Chef Dashboard
+
+Route::get('/chef-dashboard', function () {
+
+    return view('chef.dashboard');
+
+})
+->middleware('auth');
+
+
+
+
+// Default dashboard
+
+Route::get('/dashboard', function () {
+
+    return view('dashboard');
+
+})
+->middleware(['auth'])
 ->name('dashboard');
 
 
 
+
+
 Route::middleware('auth')->group(function () {
+
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])
@@ -54,20 +91,28 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('outlets', OutletController::class);
 
+
     Route::resource('foods', FoodController::class);
+
 
     Route::resource('categories', CategoryController::class);
 
+
     Route::resource('orders', OrderController::class);
+
 
     Route::resource('payments', PaymentController::class);
 
+
     Route::resource('kitchen-tickets', KitchenTicketController::class);
+
 
     Route::resource('queue-displays', QueueDisplayController::class);
 
 
+
 });
+
 
 
 require __DIR__.'/auth.php';
