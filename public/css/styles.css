@@ -10,17 +10,17 @@ body {
 .top-header {
     background: linear-gradient(135deg, #1b4318, #2e6b26);
     color: white;
-    padding: 12px 0;
+    padding: 6px 0;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .header-wrapper {
-    min-height: 70px;
+    min-height: 55px;
 }
 
 /* Logo Fixes */
 .emblem-img {
-    width: 65px;
+    width: 50px;
     height: auto;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     object-fit: contain;

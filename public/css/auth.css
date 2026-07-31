@@ -1,0 +1,88 @@
+
+.login-body {
+
+    background:
+    linear-gradient(
+        rgba(20,50,18,0.85),
+        rgba(20,50,18,0.85)
+    ),
+    url('/images/leaves-bg.png');
+
+
+    background-size:cover;
+    background-position:center;
+
+    min-height:100vh;
+
+    display:block;
+
+    padding:0;
+
+    font-family:'Segoe UI',Arial,sans-serif;
+
+}
+
+
+/* Government Header */
+.top-header {
+    width:100%;
+    background:linear-gradient(135deg,#1b4318,#2e6b26);
+    padding:8px 0;
+}
+
+
+.header-wrapper{
+    min-height:55px;
+}
+
+
+.emblem-img{
+    width:48px !important;
+    height:auto;
+}
+
+
+.department-text .title-si{
+    font-size:1rem;
+    margin:0;
+    font-weight:700;
+    color:white;
+}
+
+
+.department-text .title-en{
+    font-size:0.85rem;
+    margin:2px 0;
+    color:#e2f0d9;
+}
+
+
+.department-text .title-ta{
+    font-size:0.75rem;
+    margin:0;
+    color:white;
+}
+
+
+/* Forgot card center */
+
+.login-container{
+
+    width:100%;
+    max-width:440px;
+
+    margin:50px auto;
+
+}
+.login-logo{
+
+    width:130px;
+
+}
+.login-card{
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,0.98);
+
+}

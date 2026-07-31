@@ -109,14 +109,7 @@
                     ← Back to Public Portal
                 </a>
             </div>
-            <div class="text-center mt-3">
-    <span class="small text-muted">
-        Don't have an account?
-    </span>
-    <a href="{{ route('register') }}" class="small text-success fw-bold text-decoration-none">
-        Register
-    </a>
-</div>
+            
 
         </div>
     </div>
