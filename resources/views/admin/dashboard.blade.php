@@ -1,252 +1,226 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
 
-    <title>Admin Dashboard - Hela Bojun</title>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<style>
 
-    <style>
 
-        *{
-            font-family:'Poppins',sans-serif;
-        }
+body{
 
+background:#f5f7fb;
 
-        body{
+}
 
-            background:#f4f7f6;
-            margin:0;
 
-        }
 
+.sidebar{
 
+width:260px;
 
-        /* SIDEBAR */
+height:100vh;
 
-        .sidebar{
+position:fixed;
 
-            width:260px;
-            height:100vh;
+background:#075e3b;
 
-            position:fixed;
-            left:0;
-            top:0;
+color:white;
 
-            background:#075e3b;
+padding:20px;
 
-            color:white;
+}
 
-            padding:20px;
 
-        }
 
+.sidebar a{
 
+display:block;
 
-        .logo{
+color:white;
 
-            text-align:center;
+padding:12px;
 
-            margin-bottom:30px;
+text-decoration:none;
 
-        }
+border-radius:8px;
 
+margin-bottom:5px;
 
+}
 
-        .logo img{
 
-            width:95px;
-            height:95px;
 
-            object-fit:contain;
+.sidebar a:hover{
 
-            background:white;
+background:#0b8050;
 
-            border-radius:50%;
+}
 
-            padding:8px;
 
-        }
 
+.content{
 
+margin-left:260px;
 
-        .logo h4{
+padding:30px;
 
-            margin-top:15px;
+}
 
-            font-weight:600;
 
-        }
 
+.card-box{
 
+background:white;
 
-        .menu a{
+padding:25px;
 
-            display:flex;
+border-radius:15px;
 
-            align-items:center;
+box-shadow:0 5px 15px #ddd;
 
-            gap:12px;
+}
 
-            color:white;
 
-            text-decoration:none;
 
-            padding:13px;
+.icon{
 
-            border-radius:10px;
+font-size:35px;
 
-            margin-bottom:8px;
+color:#075e3b;
 
-            transition:0.3s;
+}
 
-        }
 
 
+/* Language Button */
 
-        .menu a:hover{
 
-            background:#0a7d50;
+.language-box{
 
-        }
+position:fixed;
 
+top:20px;
 
+right:30px;
 
+z-index:1000;
 
-        .menu i{
+}
 
-            width:20px;
 
-        }
 
+.language-btn{
 
+background:#075e3b;
 
+color:white;
 
+border:none;
 
-        /* CONTENT */
+width:45px;
 
+height:45px;
 
-        .content{
+border-radius:50%;
 
-            margin-left:260px;
+font-size:20px;
 
-            padding:25px;
+}
 
-        }
 
 
+.language-menu{
 
-        .topbar{
+display:none;
 
-            background:white;
+position:absolute;
 
-            border-radius:15px;
+right:0;
 
-            padding:20px;
+top:55px;
 
-            display:flex;
+background:white;
 
-            justify-content:space-between;
+width:160px;
 
-            align-items:center;
+border-radius:10px;
 
-            box-shadow:0 5px 20px rgba(0,0,0,0.08);
+box-shadow:0 5px 15px #ccc;
 
-        }
+overflow:hidden;
 
+}
 
 
 
+.language-menu a{
 
-        /* CARDS */
+display:block;
 
+padding:12px;
 
-        .dashboard-card{
+color:#333;
 
-            background:white;
+text-decoration:none;
 
-            padding:25px;
+}
 
-            border-radius:15px;
 
-            box-shadow:0 5px 20px rgba(0,0,0,0.08);
 
-            transition:0.3s;
+.language-menu a:hover{
 
-        }
+background:#f1f1f1;
 
+}
 
 
-        .dashboard-card:hover{
 
-            transform:translateY(-5px);
+.language-box:hover .language-menu{
 
-        }
+display:block;
 
+}
 
+.calendar-box{
 
+background:white;
 
-        .card-icon{
+padding:20px;
 
-            font-size:35px;
+border-radius:15px;
 
-            color:#075e3b;
+box-shadow:0 5px 15px #ddd;
 
-        }
+}
 
 
+.calendar-box input{
 
-        .count{
+width:100%;
 
-            font-size:32px;
+padding:10px;
 
-            font-weight:700;
+border-radius:8px;
 
-            color:#075e3b;
+border:1px solid #ddd;
 
-        }
+}
 
 
 
-
-
-        .section{
-
-            background:white;
-
-            padding:25px;
-
-            margin-top:25px;
-
-            border-radius:15px;
-
-            box-shadow:0 5px 20px rgba(0,0,0,0.08);
-
-        }
-
-
-
-
-        .badge-success{
-
-            background:#075e3b;
-
-        }
-
-
-    </style>
+</style>
 
 
 </head>
@@ -257,273 +231,297 @@
 
 
 
+<!-- Language Selector -->
 
-<!-- SIDEBAR -->
+<div class="language-box">
+
+
+<button class="language-btn">
+
+<i class="fa fa-globe"></i>
+
+</button>
+
+
+<div class="language-menu">
+
+
+<a href="/language/en">
+
+🇬🇧 English
+
+</a>
+
+
+<a href="/language/si">
+
+🇱🇰 සිංහල
+
+</a>
+
+
+<a href="/language/ta">
+
+🇮🇳 தமிழ்
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
 
 
 <div class="sidebar">
 
 
-    <div class="logo">
+<h3>
+
+<i class="fa fa-leaf"></i>
+
+Hela Bojun
+
+</h3>
 
 
-        <img src="{{ asset('images/hela-bojun-logo.png') }}" 
-             alt="Hela Bojun Logo">
 
-
-        <h4>
-            Hela Bojun
-        </h4>
-
-
-        <small>
-            Admin Panel
-        </small>
-
-
-    </div>
+<hr>
 
 
 
 
-    <div class="menu">
+<a href="/admin-dashboard">
 
+<i class="fa fa-home"></i>
 
-        <a href="#">
-            <i class="fa fa-home"></i>
-            Dashboard
-        </a>
+{{ __('messages.dashboard') }}
 
-
-
-        <a href="#">
-            <i class="fa fa-users"></i>
-            Staff Management
-        </a>
-
-
-
-        <a href="#">
-            <i class="fa fa-utensils"></i>
-            Food Management
-        </a>
+</a>
 
 
 
 
-        <a href="#">
-            <i class="fa fa-box"></i>
-            Inventory
-        </a>
+<a href="{{ route('users.index') }}">
 
+<i class="fa fa-users"></i>
 
+{{ __('messages.staff_management') }}
 
-        <a href="#">
-            <i class="fa fa-store"></i>
-            Outlets
-        </a>
-
-
-
-        <a href="#">
-            <i class="fa fa-chart-line"></i>
-            Reports
-        </a>
+</a>
 
 
 
 
-        <form method="POST" action="{{ route('logout') }}">
 
+<a href="{{ route('outlets.index') }}">
 
-            @csrf
+<i class="fa fa-store"></i>
 
+{{ __('messages.outlets') }}
 
-            <button class="btn btn-danger w-100 mt-4">
-
-                <i class="fa fa-sign-out"></i>
-
-                Logout
-
-            </button>
-
-
-        </form>
+</a>
 
 
 
-    </div>
 
+
+<a href="{{ route('foods.index') }}">
+
+<i class="fa fa-utensils"></i>
+
+{{ __('messages.foods') }}
+
+</a>
+
+
+
+
+
+<a href="#">
+
+<i class="fa fa-box"></i>
+
+{{ __('messages.inventory') }}
+
+</a>
+
+
+
+
+
+<a href="#">
+
+<i class="fa fa-chart-line"></i>
+
+{{ __('messages.reports') }}
+
+</a>
+
+
+
+
+
+<form method="POST" action="{{ route('logout') }}">
+
+
+@csrf
+
+
+<button class="btn btn-danger w-100 mt-4">
+
+
+<i class="fa fa-sign-out"></i>
+
+
+{{ __('messages.logout') }}
+
+
+</button>
+</form>
 
 </div>
-
-
-
-
-
-
-
-<!-- MAIN CONTENT -->
-
 
 <div class="content">
 
 
 
+<h2>
 
+{{ __('messages.welcome_admin') }} 👋
 
-<div class="topbar">
-
-
-    <div>
-
-        <h3>
-            Welcome Admin 👋
-        </h3>
-
-
-        <p class="text-muted mb-0">
-
-            Hela Bojun Smart Food Management System
-
-        </p>
-
-
-    </div>
+</h2>
 
 
 
-    <div>
+<p>
 
-        <i class="fa fa-bell fa-2x text-success"></i>
+{{ __('messages.system_name') }}
 
-    </div>
-
-
-
-</div>
+</p>
 
 
-
-
-
-
-
-<!-- SUMMARY CARDS -->
 
 
 <div class="row mt-4">
 
+<div class="col-md-3">
+
+<div class="card-box">
 
 
-<div class="col-md-3 mb-3">
-
-<div class="dashboard-card">
-
-
-<i class="fa fa-users card-icon"></i>
-
-
-<h6 class="mt-3">
-Total Staff
-</h6>
-
-
-<div class="count">
-25
-</div>
-
-
-</div>
-
-</div>
-
-
-
-
-
-
-<div class="col-md-3 mb-3">
-
-
-<div class="dashboard-card">
-
-
-<i class="fa fa-shopping-cart card-icon"></i>
+<i class="fa fa-users icon"></i>
 
 
 <h6 class="mt-3">
-Today's Orders
+
+{{ __('messages.total_staff') }}
+
 </h6>
 
 
-<div class="count">
-120
-</div>
+<h2>
+
+{{ $totalStaff }}
+
+</h2>
 
 
 </div>
 
-
 </div>
 
 
 
 
 
+<div class="col-md-3">
+
+<div class="card-box">
 
 
-
-<div class="col-md-3 mb-3">
-
-
-<div class="dashboard-card">
-
-
-<i class="fa fa-money-bill-wave card-icon"></i>
+<i class="fa fa-shopping-cart icon"></i>
 
 
 <h6 class="mt-3">
-Today's Sales
+
+{{ __('messages.today_orders') }}
+
 </h6>
 
 
-<div class="count">
-45K
-</div>
+<h2>
+
+{{ $todayOrders }}
+
+</h2>
 
 
 </div>
 
-
 </div>
 
 
 
 
 
+<div class="col-md-3">
 
-<div class="col-md-3 mb-3">
-
-
-<div class="dashboard-card">
+<div class="card-box">
 
 
-<i class="fa fa-box-open card-icon"></i>
+<i class="fa fa-money-bill icon"></i>
 
 
 <h6 class="mt-3">
-Low Stock
+
+{{ __('messages.today_sales') }}
+
 </h6>
 
 
-<div class="count">
-8
-</div>
+<h2>
+
+Rs {{ number_format($todaySales,2) }}
+
+</h2>
 
 
 </div>
 
+</div>
+
+
+
+
+
+
+<div class="col-md-3">
+
+<div class="card-box">
+
+
+<i class="fa fa-store icon"></i>
+
+
+<h6 class="mt-3">
+
+{{ __('messages.outlets') }}
+
+</h6>
+
+
+<h2>
+
+{{ $totalOutlets }}
+
+</h2>
+
+
+</div>
 
 </div>
 
@@ -533,157 +531,198 @@ Low Stock
 
 
 
-
-
-
-
-
-<!-- STAFF OVERVIEW -->
-
-
-<div class="section">
-
-
-<h4>
-Staff Overview
-</h4>
 
 
 
 <div class="row mt-4">
 
 
-<div class="col-md-4">
-
-<h6>
-Cashiers
-</h6>
-
-<h3>
-5
-</h3>
-
-<p>
-Active cashier staff
-</p>
-
-</div>
+<div class="col-md-8">
 
 
-
-
-<div class="col-md-4">
-
-<h6>
-Chefs
-</h6>
-
-<h3>
-8
-</h3>
-
-<p>
-Kitchen employees
-</p>
-
-
-</div>
-
-
-
-
-
-<div class="col-md-4">
-
-<h6>
-Managers
-</h6>
-
-
-<h3>
-3
-</h3>
-
-
-<p>
-Outlet managers
-</p>
-
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<!-- REPORTS -->
-
-
-<div class="section">
+<div class="card-box">
 
 
 <h4>
-System Reports
+
+{{ __('messages.sales_analysis') }}
+
 </h4>
 
 
 
-<table class="table table-hover mt-3">
+<canvas id="salesChart"></canvas>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="card-box">
+
+
+<h4>
+
+{{ __('messages.order_status') }}
+
+</h4>
+
+
+<p>
+
+{{ __('messages.pending') }} :
+
+{{ $pendingOrders }}
+
+</p>
+
+
+<p>
+
+{{ __('messages.completed') }} :
+
+{{ $completedOrders }}
+
+</p>
+
+
+<p>
+
+{{ __('messages.foods') }} :
+
+{{ $totalFoods }}
+
+</p>
+
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="calendar-box">
+
+
+<h4>
+
+<i class="fa fa-calendar"></i>
+
+{{ __('messages.calendar') }}
+
+</h4>
+
+
+
+<input type="date" 
+class="form-control"
+value="{{ date('Y-m-d') }}">
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card-box mt-4">
+
+
+<h4>
+
+{{ __('messages.recent_orders') }}
+
+</h4>
+
+
+
+
+
+<table class="table">
 
 
 <tr>
+
 
 <th>
-Report
+
+{{ __('messages.order') }}
+
 </th>
+
+
 
 <th>
-Status
+
+{{ __('messages.amount') }}
+
 </th>
 
+
+
+<th>
+
+{{ __('messages.status') }}
+
+</th>
+
+
 </tr>
 
+
+
+
+
+
+@foreach($recentOrders as $order)
 
 
 <tr>
 
-<td>
-Daily Sales Report
-</td>
 
 <td>
-<span class="badge badge-success">
-Available
-</span>
+
+#{{ $order->id }}
+
 </td>
 
 
-</tr>
-
-
-
-
-<tr>
 
 <td>
-Inventory Report
+
+Rs {{ $order->total_amount }}
+
 </td>
 
+
+
 <td>
-<span class="badge badge-success">
-Available
-</span>
+
+{{ $order->status }}
+
 </td>
 
 
@@ -691,29 +730,13 @@ Available
 
 
 
-
-
-<tr>
-
-<td>
-Staff Performance Report
-</td>
-
-<td>
-<span class="badge badge-success">
-Available
-</span>
-</td>
-
-
-</tr>
+@endforeach
 
 
 
 </table>
 
 
-
 </div>
 
 
@@ -721,61 +744,79 @@ Available
 
 
 
-
-
-
-<!-- RECENT ACTIVITY -->
-
-
-<div class="section">
-
-
-<h4>
-Recent Activities
-</h4>
-
-
-
-<ul class="list-group mt-3">
-
-
-<li class="list-group-item">
-
-<i class="fa fa-plus-circle text-success"></i>
-
-New order created by Cashier
-
-</li>
-
-
-
-<li class="list-group-item">
-
-<i class="fa fa-check-circle text-success"></i>
-
-Chef completed kitchen ticket
-
-</li>
-
-
-
-<li class="list-group-item">
-
-<i class="fa fa-box text-success"></i>
-
-Inventory updated
-
-</li>
-
-
-
-</ul>
-
-
 </div>
 
 
-</div>
 
+<script>
+
+
+new Chart(
+
+document.getElementById('salesChart'),
+
+{
+
+
+type:'line',
+
+
+data:{
+
+
+labels:[
+
+'Mon',
+
+'Tue',
+
+'Wed',
+
+'Thu',
+
+'Fri',
+
+'Sat',
+
+'Sun'
+
+],
+
+
+
+datasets:[{
+
+
+label:'Sales',
+
+
+data:[
+
+10000,
+
+15000,
+
+12000,
+
+25000,
+
+30000,
+
+20000,
+
+40000
+
+]
+
+
+}]
+}
+
+
+});
+
+
+</script>
 </body>
+
 </html>

@@ -12,10 +12,10 @@ class Payment extends Model
         'amount',
         'payment_method',
         'payment_status',
+        'cash_received',
+        'change_amount',
     ];
 
-
-    // Relationships
 
     public function order()
     {

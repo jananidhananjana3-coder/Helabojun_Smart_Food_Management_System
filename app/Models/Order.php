@@ -10,6 +10,7 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'outlet_id',
+        'counter_id',
         'token_number',
         'total_amount',
         'status',
@@ -52,5 +53,9 @@ class Order extends Model
     public function queueDisplay()
     {
         return $this->hasOne(QueueDisplay::class);
+    }
+    public function counter()
+    {
+    return $this->belongsTo(Counter::class);    
     }
 }

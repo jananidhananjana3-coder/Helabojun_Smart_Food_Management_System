@@ -1,68 +1,319 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foods</title>
+
+
+    <title>Food Management | Hela Bojun</title>
+
+
+    <!-- Bootstrap CSS -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+
+    <style>
+
+
+        body{
+
+            background:#f5f7f6;
+
+        }
+
+
+        .page-header{
+
+            background:#075e3b;
+
+            color:white;
+
+            border-radius:12px;
+
+        }
+
+
+        .food-image{
+
+            width:70px;
+
+            height:70px;
+
+            object-fit:cover;
+
+            border-radius:10px;
+
+        }
+
+
+        .table-card{
+
+            border-radius:15px;
+
+            overflow:hidden;
+
+        }
+
+
+    </style>
+php
 </head>
+
 <body>
 
-<h1>Food Management</h1>
+<div class="container py-5">
 
-<a href="{{ route('foods.create') }}">
-    Add Food
-</a>
 
-<br><br>
 
-<table border="1">
+    <div class="page-header p-4 mb-4 shadow">
 
-<tr>
-    <th>ID</th>
-    <th>Food Name</th>
-    <th>Category</th>
-    <th>Outlet</th>
-    <th>Price</th>
-    <th>Quantity</th>
-    <th>Actions</th>
-</tr>
 
-@foreach($foods as $food)
+        <div class="d-flex justify-content-between align-items-center">
 
-<tr>
 
-    <td>{{ $food->id }}</td>
+            <h2 class="mb-0">
 
-    <td>{{ $food->food_name }}</td>
+                Food Management
 
-    <td>{{ $food->category->category_name }}</td>
+            </h2>
 
-    <td>{{ $food->outlet->outlet_name }}</td>
 
-    <td>{{ $food->price }}</td>
 
-    <td>{{ $food->available_quantity }}</td>
+            <a href="{{ route('foods.create') }}"
+               class="btn btn-light">
 
-    <td>
 
-        <a href="{{ route('foods.edit', $food->id) }}">Edit</a>
+                + Add Food
 
-        <form action="{{ route('foods.destroy', $food->id) }}" method="POST"style="display:inline;">
 
-            @csrf
-            @method('DELETE')
+            </a>
 
-            <button type="submit">Delete</button>
 
-        </form>
 
-    </td>
+        </div>
 
-</tr>
 
-@endforeach
+    </div>
 
-</table>
+    @if(session('success'))
+
+
+        <div class="alert alert-success">
+
+
+            {{ session('success') }}
+
+
+        </div>
+
+
+    @endif
+
+    <div class="card shadow table-card">
+
+
+        <div class="card-body">
+
+
+
+            <div class="table-responsive">
+
+
+
+                <table class="table table-bordered table-hover align-middle">
+
+
+
+                    <thead class="table-success">
+
+
+                        <tr>
+
+
+                            <th>
+
+                                Image
+
+                            </th>
+
+
+                            <th>
+
+                                Food Name
+
+                            </th>
+
+
+                            <th>
+
+                                Category
+
+                            </th>
+
+
+                            <th>
+
+                                Outlet
+
+                            </th>
+
+
+                            <th>
+
+                                Price
+
+                            </th>
+
+
+                            <th>
+
+                                Quantity
+
+                            </th>
+
+
+                            <th>
+
+                                Action
+
+                            </th>
+
+
+                        </tr>
+
+
+                    </thead>
+
+                    <tbody>
+
+                    @foreach($foods as $food)
+
+                        <tr>
+
+
+
+                            <td>
+
+
+
+                                @if($food->image)
+
+
+
+                                    <img src="{{ asset('storage/'.$food->image) }}"
+                                         class="food-image">
+
+
+
+                                @else
+
+
+
+                                    <span class="text-muted">
+
+                                        No Image
+
+                                    </span>
+
+
+
+                                @endif
+
+
+
+                            </td>
+
+                            <td>
+
+
+                                {{ $food->food_name }}
+
+
+                            </td>
+
+                            <td>
+
+
+                                {{ $food->category->category_name ?? 'N/A' }}
+
+
+                            </td>
+
+                            <td>
+
+
+                                {{ $food->outlet->outlet_name ?? 'N/A' }}
+
+
+                            </td>
+                            <td>
+
+
+                                Rs. {{ number_format($food->price,2) }}
+
+
+                            </td>
+                            <td>
+
+
+                                {{ $food->available_quantity }}
+
+
+                            </td>
+                            <td>
+
+
+
+                                <a href="{{ route('foods.edit',$food->id) }}"
+                                   class="btn btn-warning btn-sm">
+
+
+                                    Edit
+
+
+                                </a>
+
+                                <form action="{{ route('foods.destroy',$food->id) }}"
+                                      method="POST"
+                                      class="d-inline">
+
+
+                                    @csrf
+
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Delete this food?')">
+
+
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+
+                        </tr>
+
+                    @endforeach
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 </body>
+
 </html>

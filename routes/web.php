@@ -1,6 +1,8 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
+
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OutletController;
@@ -10,8 +12,13 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\KitchenTicketController;
 use App\Http\Controllers\QueueDisplayController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CustomerDisplayController;
+use App\Http\Controllers\UserController;
 
 
+
+// Home Page
 
 Route::get('/', function () {
 
@@ -24,11 +31,8 @@ Route::get('/', function () {
 
 // Admin Dashboard
 
-Route::get('/admin-dashboard', function () {
-
-    return view('admin.dashboard');
-
-})
+Route::get('/admin-dashboard',
+[DashboardController::class,'admin'])
 ->middleware('auth');
 
 
@@ -36,11 +40,8 @@ Route::get('/admin-dashboard', function () {
 
 // Cashier Dashboard
 
-Route::get('/cashier-dashboard', function () {
-
-    return view('cashier.dashboard');
-
-})
+Route::get('/cashier-dashboard',
+[DashboardController::class,'cashier'])
 ->middleware('auth');
 
 
@@ -48,17 +49,14 @@ Route::get('/cashier-dashboard', function () {
 
 // Chef Dashboard
 
-Route::get('/chef-dashboard', function () {
-
-    return view('chef.dashboard');
-
-})
+Route::get('/chef-dashboard',
+[DashboardController::class,'chef'])
 ->middleware('auth');
 
 
 
 
-// Default dashboard
+// Default Dashboard
 
 Route::get('/dashboard', function () {
 
@@ -72,46 +70,109 @@ Route::get('/dashboard', function () {
 
 
 
+
+// Authenticated Routes
+
 Route::middleware('auth')->group(function () {
 
 
 
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+    Route::get('/profile', 
+    [ProfileController::class, 'edit'])
+    ->name('profile.edit');
 
 
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
+
+    Route::patch('/profile', 
+    [ProfileController::class, 'update'])
+    ->name('profile.update');
 
 
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
+
+    Route::delete('/profile', 
+    [ProfileController::class, 'destroy'])
+    ->name('profile.destroy');
 
 
+
+
+    // Outlet Management
 
     Route::resource('outlets', OutletController::class);
 
 
+
+    // Food Management
+
     Route::resource('foods', FoodController::class);
 
+
+
+    // Category Management
 
     Route::resource('categories', CategoryController::class);
 
 
+
+    // Order Management
+
     Route::resource('orders', OrderController::class);
 
+
+
+    // Payment Management
 
     Route::resource('payments', PaymentController::class);
 
 
+
+    // Kitchen Ticket
+
     Route::resource('kitchen-tickets', KitchenTicketController::class);
 
 
-    Route::resource('queue-displays', QueueDisplayController::class);
+
+
+    // Queue Display
+
+    Route::get('/queue-display',
+    [QueueDisplayController::class,'index'])
+    ->name('queue.display');
+
+
+
+    // Customer Display
+
+    Route::get('/customer-display',
+    [CustomerDisplayController::class,'index'])
+    ->name('customer.display');
+
+
+
+    // Staff Management
+
+    Route::resource('users', UserController::class);
 
 
 
 });
+
+
+
+
+
+// Language Change Route
+
+Route::get('/language/{lang}', function($lang){
+
+    session()->put('locale',$lang);
+
+    return back();
+
+});
+
+
+
 
 
 

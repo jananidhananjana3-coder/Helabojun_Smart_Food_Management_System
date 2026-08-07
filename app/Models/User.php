@@ -19,14 +19,29 @@ class User extends Authenticatable
 
     protected $fillable = [
 
-        'name',
-        'email',
-        'password',
-        'phone',
-        'role',
-        'outlet_id',
-        'counter_id',
-        'verification_code'
+    'name',
+
+    'email',
+
+    'password',
+
+    'phone',
+
+    'profile_image',
+
+    'role',
+
+    'outlet_id',
+
+    'counter_id',
+
+    'nic_number',
+
+    'birthday',
+
+    'address',
+
+    'join_date'
 
     ];
 
@@ -45,6 +60,10 @@ class User extends Authenticatable
 
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'birthday' => 'date',
+
+        'join_date' => 'date',
+
 
     ];
 
