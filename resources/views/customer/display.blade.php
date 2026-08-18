@@ -1,477 +1,537 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<title>Hela Bojun Customer Display</title>
+    <title>
+        Hela Bojun Customer Display
+    </title>
 
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-rel="stylesheet">
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
 
-<style>
+    <style>
 
-body{
+        body {
+            background: #fff7d6;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-    background:#fff7d6;
 
-    font-family:'Segoe UI', sans-serif;
+        /* HEADER */
 
-    margin:0;
+        .header {
+            background: #075e3b;
+            color: white;
+            padding: 12px 15px;
+        }
 
-    padding:0;
 
-}
+        .brand-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
 
 
-/* HEADER */
+        .logo {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+        }
 
-.header{
 
-    background:#075e3b;
+        .brand-name {
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1.1;
+        }
 
-    color:white;
 
-    padding:12px 15px;
+        .header small {
+            font-size: 14px;
+        }
 
-}
 
+        .container {
+            padding: 5px 10px;
+        }
 
-.brand-area{
 
-    display:flex;
+        /* CATEGORY */
 
-    align-items:center;
+        .category-title {
+            background: #075e3b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 17px;
+            margin: 5px 0;
+        }
 
-    justify-content:center;
 
-    gap:15px;
+        /* FOOD CARD */
 
-}
+        .food-card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
 
 
-.logo{
+        .food-image {
+            width: 100%;
+            height: 95px;
+            object-fit: cover;
+        }
 
-    width:75px;
 
-    height:75px;
+        .food-body {
+            padding: 5px;
+            text-align: center;
+        }
 
-    object-fit:contain;
 
-}
+        .food-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #075e3b;
+            line-height: 1.1;
+        }
 
 
-.brand-name{
+        .food-price {
+            font-size: 13px;
+            font-weight: bold;
+            color: #d97706;
+        }
 
-    font-size:30px;
 
-    font-weight:700;
+        .mb-3 {
+            margin-bottom: 8px !important;
+        }
 
-    line-height:1.1;
 
-}
+        /* SUB CATEGORY */
 
+        .sub-category-title {
+            color: #075e3b;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 12px 0;
+        }
 
-.header small{
 
-    font-size:14px;
+        /* REAL-TIME STATUS */
 
-}
+        .realtime-status {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            background: #075e3b;
+            color: white;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 9999;
+        }
 
-
-
-.container{
-
-    padding:5px 10px;
-
-}
-
-
-
-/* CATEGORY */
-
-.category-title{
-
-
-    background:#075e3b;
-
-    color:white;
-
-    padding:5px 15px;
-
-    border-radius:20px;
-
-    display:inline-block;
-
-    font-size:17px;
-
-    margin:5px 0;
-
-}
-
-
-
-/* FOOD CARD */
-
-
-.food-card{
-
-    border:none;
-
-    border-radius:10px;
-
-    overflow:hidden;
-
-    box-shadow:0 2px 6px rgba(0,0,0,0.15);
-
-}
-
-
-
-.food-image{
-
-    width:100%;
-
-    height:95px;
-
-    object-fit:cover;
-
-}
-
-
-
-.food-body{
-
-    padding:5px;
-
-    text-align:center;
-
-}
-
-
-
-.food-name{
-
-    font-size:14px;
-
-    font-weight:700;
-
-    color:#075e3b;
-
-    line-height:1.1;
-
-}
-
-
-
-.food-price{
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    color:#d97706;
-
-}
-
-
-
-.mb-3{
-
-    margin-bottom:8px !important;
-
-}
-
-
-
-/* SUB CATEGORY */
-
-.sub-category-title{
-
-    color:#075e3b;
-
-    font-weight:700;
-
-    font-size:16px;
-
-    margin:12px 0;
-
-}
-
-
-</style>
+    </style>
 
 </head>
-
 
 
 <body>
 
 
-<div class="header">
+    <!-- HEADER -->
 
+    <div class="header">
 
-<div class="brand-area">
+        <div class="brand-area">
 
+            <img
+                src="{{ asset('images/hela-bojun-logo.png') }}"
+                class="logo"
+            >
 
-<img src="{{ asset('images/hela-bojun-logo.png') }}"
-class="logo">
 
+            <div>
 
-<div>
+                <div class="brand-name">
+                    Hela Bojun
+                </div>
 
-<div class="brand-name">
 
-Hela Bojun
+                <small>
+                    Authentic Sri Lankan Traditional Food Experience
+                </small>
 
-</div>
+            </div>
 
+        </div>
 
-<small>
+    </div>
 
-Authentic Sri Lankan Traditional Food Experience
 
-</small>
+    <!-- FOOD CONTENT -->
 
+    <div class="container">
 
-</div>
 
+        @foreach($categories as $categoryName => $foods)
 
-</div>
 
+            <!-- CATEGORY TITLE -->
 
-</div>
+            <div class="text-center">
 
+                <span class="category-title">
+                    {{ $categoryName }}
+                </span>
 
+            </div>
 
 
+            <!-- BEVERAGES -->
 
-<div class="container">
+            @if($categoryName == 'Beverages')
 
 
+                @php
 
-@foreach($categories as $categoryName => $foods)
+                    $beverageGroups = $foods->groupBy('sub_category');
 
+                @endphp
 
 
-<div class="text-center">
+                @foreach($beverageGroups as $subCategory => $items)
 
-<span class="category-title">
 
-{{ $categoryName }}
+                    <!-- SUB CATEGORY -->
 
-</span>
+                    <div class="text-center">
 
-</div>
+                        <span class="sub-category-title">
+                            {{ $subCategory }}
+                        </span>
 
+                    </div>
 
 
+                    <div class="row">
 
 
-@if($categoryName == 'Beverages')
+                        @foreach($items as $food)
 
 
+                            <div class="col-6 col-md-3 col-lg-2 mb-3">
 
-@php
 
-$beverageGroups = $foods->groupBy('sub_category');
+                                <div class="card food-card">
 
-@endphp
 
+                                    @if($food->image)
 
+                                        <img
+                                            src="{{ asset('storage/'.$food->image) }}"
+                                            class="food-image"
+                                        >
 
+                                    @else
 
-@foreach($beverageGroups as $subCategory => $items)
+                                        <img
+                                            src="https://via.placeholder.com/300"
+                                            class="food-image"
+                                        >
 
+                                    @endif
 
 
-<div class="text-center">
+                                    <div class="food-body">
 
-<span class="sub-category-title">
 
-{{ $subCategory }}
+                                        <div class="food-name">
+                                            {{ $food->food_name }}
+                                        </div>
 
-</span>
 
-</div>
+                                        <div class="food-price">
+                                            Rs.
+                                            {{ number_format($food->price, 2) }}
+                                        </div>
 
 
+                                    </div>
 
+                                </div>
 
-<div class="row">
 
+                            </div>
 
 
-@foreach($items as $food)
+                        @endforeach
 
 
+                    </div>
 
-<div class="col-6 col-md-3 col-lg-2 mb-3">
 
+                @endforeach
 
 
-<div class="card food-card">
+            <!-- OTHER CATEGORIES -->
 
+            @else
 
 
-@if($food->image)
+                <div class="row">
 
 
-<img src="{{ asset('storage/'.$food->image) }}"
-class="food-image">
+                    @foreach($foods as $food)
 
 
+                        <div class="col-6 col-md-3 col-lg-2 mb-3">
 
-@else
 
+                            <div class="card food-card">
 
-<img src="https://via.placeholder.com/300"
-class="food-image">
 
+                                @if($food->image)
 
+                                    <img
+                                        src="{{ asset('storage/'.$food->image) }}"
+                                        class="food-image"
+                                    >
 
-@endif
+                                @else
 
+                                    <img
+                                        src="https://via.placeholder.com/300"
+                                        class="food-image"
+                                    >
 
+                                @endif
 
 
-<div class="food-body">
+                                <div class="food-body">
 
 
-<div class="food-name">
+                                    <div class="food-name">
+                                        {{ $food->food_name }}
+                                    </div>
 
-{{ $food->food_name }}
 
-</div>
+                                    <div class="food-price">
+                                        Rs.
+                                        {{ number_format($food->price, 2) }}
+                                    </div>
 
 
+                                </div>
 
-<div class="food-price">
+                            </div>
 
-Rs. {{ number_format($food->price,2) }}
 
-</div>
+                        </div>
 
 
+                    @endforeach
 
-</div>
 
+                </div>
 
-</div>
 
+            @endif
 
-</div>
 
+        @endforeach
 
 
-@endforeach
+    </div>
 
 
+    <!-- REAL-TIME STATUS -->
 
-</div>
+    <div
+        class="realtime-status"
+        id="realtimeStatus"
+    >
+        Connecting...
+    </div>
 
 
+    <!-- PUSHER JS -->
 
-@endforeach
+    <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 
 
+    <script>
 
+        /*
+        |--------------------------------------------------------------------------
+        | Hela Bojun Customer Display - Real-Time WebSocket
+        |--------------------------------------------------------------------------
+        */
 
 
-@else
+        @if(env('REVERB_APP_KEY'))
 
 
+            const pusher = new Pusher(
+                @json(env('REVERB_APP_KEY')),
+                {
 
-<div class="row">
+                    wsHost: @json(
+                        env('REVERB_HOST', '127.0.0.1')
+                    ),
 
+                    wsPort: Number(
+                        @json(env('REVERB_PORT', 8080))
+                    ),
 
+                    wssPort: Number(
+                        @json(env('REVERB_PORT', 8080))
+                    ),
 
-@foreach($foods as $food)
+                    forceTLS:
+                        @json(
+                            env('REVERB_SCHEME', 'http') === 'https'
+                        ),
 
+                    enabledTransports: [
+                        'ws',
+                        'wss'
+                    ],
 
+                    disableStats: true
 
-<div class="col-6 col-md-3 col-lg-2 mb-3">
+                }
+            );
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | Subscribe to Inventory Channel
+            |--------------------------------------------------------------------------
+            */
 
-<div class="card food-card">
+            const inventoryChannel =
+                pusher.subscribe('inventory');
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | Inventory Updated Event
+            |--------------------------------------------------------------------------
+            */
 
-@if($food->image)
+            inventoryChannel.bind(
+                'food.inventory.updated',
+                function (data) {
 
+                    console.log(
+                        'Food inventory updated:',
+                        data
+                    );
 
-<img src="{{ asset('storage/'.$food->image) }}"
-class="food-image">
 
+                    document.getElementById(
+                        'realtimeStatus'
+                    ).textContent = 'Updating...';
 
 
-@else
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Reload Customer Display
+                    |--------------------------------------------------------------------------
+                    |
+                    | This keeps your existing category + beverage
+                    | sub-category Blade design unchanged.
+                    |
+                    */
 
+                    setTimeout(function () {
 
-<img src="https://via.placeholder.com/300"
-class="food-image">
+                        window.location.reload();
 
+                    }, 300);
 
+                }
+            );
 
-@endif
 
+            /*
+            |--------------------------------------------------------------------------
+            | Connected
+            |--------------------------------------------------------------------------
+            */
 
+            pusher.connection.bind(
+                'connected',
+                function () {
 
+                    document.getElementById(
+                        'realtimeStatus'
+                    ).textContent = '● LIVE';
 
-<div class="food-body">
+                }
+            );
 
 
-<div class="food-name">
+            /*
+            |--------------------------------------------------------------------------
+            | Connection Error
+            |--------------------------------------------------------------------------
+            */
 
-{{ $food->food_name }}
+            pusher.connection.bind(
+                'error',
+                function (error) {
 
-</div>
+                    console.error(
+                        'WebSocket error:',
+                        error
+                    );
 
 
+                    document.getElementById(
+                        'realtimeStatus'
+                    ).textContent = 'Offline';
 
-<div class="food-price">
+                }
+            );
 
-Rs. {{ number_format($food->price,2) }}
 
-</div>
+        @else
 
 
+            document.getElementById(
+                'realtimeStatus'
+            ).textContent = 'WebSocket not configured';
 
-</div>
 
+        @endif
 
-</div>
 
-
-</div>
-
-
-
-@endforeach
-
-
-
-</div>
-
-
-
-@endif
-
-
-
-
-@endforeach
-
-
-
-
-</div>
-
+    </script>
 
 
 </body>

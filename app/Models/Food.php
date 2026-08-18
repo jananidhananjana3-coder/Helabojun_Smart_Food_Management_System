@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Food extends Model
 {
+    use HasFactory;
+
     protected $table = 'foods';
+
     protected $fillable = [
         'category_id',
         'outlet_id',
@@ -18,23 +21,27 @@ class Food extends Model
         'available_quantity',
     ];
 
-
-    // Relationships
-
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
-
 
     public function outlet()
     {
         return $this->belongsTo(Outlet::class);
     }
 
-
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function counters()
+    {
+        return $this->belongsToMany(
+            Counter::class,
+            'food_counter'
+        )->withPivot('quantity')
+         ->withTimestamps();
     }
 }

@@ -1,0 +1,41 @@
+warning: in the working copy of 'resources/views/admin/dashboard.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/admin/staff/create.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/admin/staff/edit.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/admin/staff/index.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/admin/staff/show.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/cashier/dashboard.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/chef/dashboard.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/customer/display.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/foods/create.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/foods/edit.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/queue/display.blade.php', CRLF will be replaced by LF the next time Git touches it
+ .../Controllers/Auth/OtpVerificationController.php |   31 [32m+[m[31m-[m
+ app/Http/Controllers/DashboardController.php       |  167 [32m++[m[31m-[m
+ app/Http/Controllers/FoodController.php            |  383 [32m+++++[m[31m-[m
+ app/Http/Controllers/OrderController.php           |  836 [32m+++++++++++[m[31m--[m
+ app/Http/Controllers/QueueDisplayController.php    |   34 [32m+[m[31m-[m
+ app/Http/Controllers/UserController.php            |  635 [32m++++++++[m[31m--[m
+ app/Models/Counter.php                             |   25 [32m+[m[31m-[m
+ app/Models/Food.php                                |   19 [32m+[m[31m-[m
+ app/Models/KitchenTicket.php                       |   19 [32m+[m[31m-[m
+ app/Models/Order.php                               |   88 [32m+[m[31m-[m
+ app/Models/OrderItem.php                           |   12 [32m+[m[31m-[m
+ app/Models/Payment.php                             |   27 [32m+[m[31m-[m
+ app/Models/User.php                                |   91 [32m+[m[31m-[m
+ helabojun_db.sql                                   |  103 [32m+[m[31m-[m
+ package-lock.json                                  |   40 [32m+[m
+ package.json                                       |    4 [32m+[m
+ resources/js/app.js                                |   21 [32m+[m
+ resources/views/admin/dashboard.blade.php          |  788 [32m+++[m[31m---------[m
+ resources/views/admin/staff/create.blade.php       |  678 [32m+++++++[m[31m---[m
+ resources/views/admin/staff/edit.blade.php         |  753 [32m++++++++[m[31m---[m
+ resources/views/admin/staff/index.blade.php        |  633 [32m+++++[m[31m-----[m
+ resources/views/admin/staff/show.blade.php         |  287 [32m+++[m[31m--[m
+ resources/views/cashier/dashboard.blade.php        | 1312 [32m+++++++++++++++++++[m[31m-[m
+ resources/views/chef/dashboard.blade.php           |  839 [32m++++++++++++[m[31m-[m
+ resources/views/customer/display.blade.php         |  582 [32m+++++[m[31m----[m
+ resources/views/foods/create.blade.php             |  463 [32m++++[m[31m---[m
+ resources/views/foods/edit.blade.php               |  447 [32m++++[m[31m---[m
+ resources/views/queue/display.blade.php            |  263 [32m++[m[31m--[m
+ routes/web.php                                     |  279 [32m+++[m[31m--[m
+ 29 files changed, 7189 insertions(+), 2670 deletions(-)

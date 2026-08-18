@@ -1,367 +1,727 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.admin')
 
-<head>
+@section('title', 'Add Staff')
 
-<title>Add Staff</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
+@push('styles')
 
 <style>
 
-body{
-    background:#f5f7fb;
-}
+    .card-box {
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px #ddd;
+    }
 
+    .title {
+        color: #075e3b;
+        font-weight: bold;
+    }
 
-.card-box{
+    .btn-save {
+        background: #075e3b;
+        color: white;
+    }
 
-    background:white;
+    .btn-save:hover {
+        background: #0b8050;
+        color: white;
+    }
 
-    padding:35px;
-
-    border-radius:15px;
-
-    box-shadow:0 5px 15px #ddd;
-
-}
-
-
-.title{
-
-    color:#075e3b;
-
-    font-weight:bold;
-
-}
-
-
-.btn-save{
-
-    background:#075e3b;
-
-    color:white;
-
-}
-
-
-.btn-save:hover{
-
-    background:#0b8050;
-
-    color:white;
-
-}
+    .training-section {
+        display: none;
+    }
 
 </style>
 
-</head>
+@endpush
 
 
-<body>
-
-
-<div class="container mt-5">
-
+@section('content')
 
 <div class="card-box">
 
+    <h2 class="title">
 
-<h2 class="title">
+        <i class="fa fa-user-plus"></i>
 
-<i class="fa fa-user-plus"></i>
+        Add Staff
 
-Add Staff
+    </h2>
 
-</h2>
-
-
-<hr>
+    <hr>
 
 
+    {{-- VALIDATION ERRORS --}}
 
-<form action="{{route('users.store')}}"
-method="POST"
-enctype="multipart/form-data">
+    @if($errors->any())
+
+        <div class="alert alert-danger">
+
+            <ul class="mb-0">
+
+                @foreach($errors->all() as $error)
+
+                    <li>{{ $error }}</li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
+
+    @endif
 
 
-@csrf
+    <form action="{{ route('users.store') }}"
+          method="POST"
+          enctype="multipart/form-data">
+
+        @csrf
 
 
+        <div class="row">
 
-<div class="row">
+
+            {{-- NAME --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Name
+                </label>
+
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       value="{{ old('name') }}"
+                       required>
+
+            </div>
 
 
-<div class="col-md-6 mb-3">
+            {{-- EMAIL --}}
 
-<label>Name</label>
+            <div class="col-md-6 mb-3">
 
-<input type="text"
-name="name"
-class="form-control"
-required>
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input type="email"
+                       name="email"
+                       class="form-control"
+                       value="{{ old('email') }}"
+                       required>
+
+            </div>
+
+
+            {{-- PASSWORD --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Password
+                </label>
+
+                <input type="password"
+                       name="password"
+                       class="form-control"
+                       required>
+
+                <small class="text-muted">
+                    Password must contain at least 8 characters
+                </small>
+
+            </div>
+
+
+            {{-- PHONE --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Phone
+                </label>
+
+                <input type="text"
+                       name="phone"
+                       class="form-control"
+                       value="{{ old('phone') }}">
+
+            </div>
+
+
+            {{-- NIC --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    NIC Number
+                </label>
+
+                <input type="text"
+                       name="nic_number"
+                       class="form-control"
+                       value="{{ old('nic_number') }}">
+
+            </div>
+
+
+            {{-- BIRTHDAY --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Birthday
+                </label>
+
+                <input type="date"
+                       name="birthday"
+                       class="form-control"
+                       value="{{ old('birthday') }}">
+
+            </div>
+
+
+            {{-- ADDRESS --}}
+
+            <div class="col-md-12 mb-3">
+
+                <label class="form-label">
+                    Address
+                </label>
+
+                <textarea name="address"
+                          class="form-control"
+                          rows="3">{{ old('address') }}</textarea>
+
+            </div>
+
+
+            {{-- JOIN DATE --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Join Date
+                </label>
+
+                <input type="date"
+                       name="join_date"
+                       class="form-control"
+                       value="{{ old('join_date') }}">
+
+            </div>
+
+
+            {{-- ROLE --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Role
+                </label>
+
+                <select name="role"
+                        id="role"
+                        class="form-control"
+                        required>
+
+                    <option value="">
+                        Select Role
+                    </option>
+
+                    <option value="admin"
+                        {{ old('role') == 'admin' ? 'selected' : '' }}>
+                        Admin
+                    </option>
+
+                    <option value="manager"
+                        {{ old('role') == 'manager' ? 'selected' : '' }}>
+                        Manager
+                    </option>
+
+                    <option value="chef"
+                        {{ old('role') == 'chef' ? 'selected' : '' }}>
+                        Chef
+                    </option>
+
+                    <option value="cashier"
+                        {{ old('role') == 'cashier' ? 'selected' : '' }}>
+                        Cashier
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            {{-- PROFILE IMAGE --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Profile Image
+                </label>
+
+                <input type="file"
+                       name="profile_image"
+                       class="form-control">
+
+            </div>
+
+
+            {{-- OUTLET --}}
+
+            <div class="col-md-6 mb-3"
+                 id="outletField">
+
+                <label class="form-label">
+                    Outlet
+                </label>
+
+                <select name="outlet_id"
+                        id="outlet_id"
+                        class="form-control">
+
+                    <option value="">
+                        Select Outlet
+                    </option>
+
+                    @foreach($outlets as $outlet)
+
+                        <option value="{{ $outlet->id }}"
+                            {{ old('outlet_id') == $outlet->id ? 'selected' : '' }}>
+
+                            {{ $outlet->outlet_name }}
+
+                        </option>
+
+                    @endforeach
+
+                </select>
+
+            </div>
+
+
+            {{-- COUNTER --}}
+
+            <div class="col-md-6 mb-3"
+                 id="counterField"
+                 style="display:none;">
+
+                <label class="form-label">
+                    Counter
+                </label>
+
+                <select name="counter_id"
+                        id="counter_id"
+                        class="form-control">
+
+                    <option value="">
+                        Select Counter
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            {{-- TRAINING --}}
+
+            <div class="col-md-6 mb-3"
+                 id="trainingField"
+                 style="display:none;">
+
+                <label class="form-label">
+                    Training Period
+                </label>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Start Date
+                        </label>
+
+                        <input type="date"
+                               name="training_start_date"
+                               id="training_start_date"
+                               class="form-control"
+                               value="{{ old('training_start_date') }}">
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            End Date
+                        </label>
+
+                        <input type="date"
+                               name="training_end_date"
+                               id="training_end_date"
+                               class="form-control"
+                               value="{{ old('training_end_date') }}">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- FOOD SPECIALTIES --}}
+
+            <div class="col-md-6 mb-3"
+                 id="specialtiesField"
+                 style="display:none;">
+
+                <label class="form-label">
+                    Food Specialties
+                </label>
+
+                <textarea name="food_specialties"
+                          id="food_specialties"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Example: Rice & Curry, Hoppers, String Hoppers">{{ old('food_specialties') }}</textarea>
+
+            </div>
+
+
+        </div>
+
+
+        {{-- SAVE --}}
+
+        <button type="submit"
+                class="btn btn-save px-4">
+
+            <i class="fa fa-save"></i>
+
+            Save Staff
+
+        </button>
+
+
+        {{-- BACK --}}
+
+        <a href="{{ route('users.index') }}"
+           class="btn btn-secondary">
+
+            <i class="fa fa-arrow-left"></i>
+
+            Back
+
+        </a>
+
+
+    </form>
 
 </div>
 
+@endsection
 
 
+@push('scripts')
 
-<div class="col-md-6 mb-3">
+<script>
 
-<label>Email</label>
+document.addEventListener('DOMContentLoaded', function () {
 
-<input type="email"
-name="email"
-class="form-control"
-required>
+    const role = document.getElementById('role');
 
-</div>
+    const outlet = document.getElementById('outlet_id');
 
+    const counter = document.getElementById('counter_id');
 
+    const outletField =
+        document.getElementById('outletField');
 
-<div class="col-md-6 mb-3">
+    const counterField =
+        document.getElementById('counterField');
 
-<label>Password</label>
+    const trainingField =
+        document.getElementById('trainingField');
 
-<input type="password"
-name="password"
-class="form-control"
-required>
+    const specialtiesField =
+        document.getElementById('specialtiesField');
 
-</div>
+    const trainingStart =
+        document.getElementById('training_start_date');
 
+    const trainingEnd =
+        document.getElementById('training_end_date');
 
 
-<div class="col-md-6 mb-3">
+    /*
+    |--------------------------------------------------------------------------
+    | ALL COUNTERS FROM DATABASE
+    |--------------------------------------------------------------------------
+    */
 
-<label>Phone</label>
+    const allCounters = @json($counters);
 
-<input type="text"
-name="phone"
-class="form-control">
 
-</div>
+    /*
+    |--------------------------------------------------------------------------
+    | LOAD COUNTERS
+    |--------------------------------------------------------------------------
+    */
 
+    function loadCounters() {
 
+        const selectedOutlet =
+            String(outlet.value);
 
 
-<div class="col-md-6 mb-3">
+        /*
+        | Reset counter
+        */
 
-<label>NIC Number</label>
+        counter.innerHTML = '';
 
-<input type="text"
-name="nic_number"
-class="form-control">
+        const defaultOption =
+            document.createElement('option');
 
-</div>
+        defaultOption.value = '';
 
+        defaultOption.textContent =
+            'Select Counter';
 
+        counter.appendChild(defaultOption);
 
 
-<div class="col-md-6 mb-3">
+        /*
+        | No outlet
+        */
 
-<label>Birthday</label>
+        if (!selectedOutlet) {
 
-<input type="date"
-name="birthday"
-class="form-control">
+            return;
+        }
 
-</div>
 
+        /*
+        | Filter counters
+        */
 
+        const filteredCounters =
+            allCounters.filter(function (item) {
 
+                return String(item.outlet_id) ===
+                       selectedOutlet;
 
-<div class="col-md-12 mb-3">
+            });
 
-<label>Address</label>
 
-<textarea name="address"
-class="form-control"></textarea>
+        /*
+        | Add counters
+        */
 
-</div>
+        filteredCounters.forEach(function (item) {
 
+            const option =
+                document.createElement('option');
 
+            option.value =
+                item.id;
 
+            option.textContent =
+                item.name +
+                ' - ' +
+                item.number;
 
-<div class="col-md-6 mb-3">
+            counter.appendChild(option);
 
-<label>Join Date</label>
+        });
 
-<input type="date"
-name="join_date"
-class="form-control">
 
-</div>
+        /*
+        | Old selected counter
+        */
 
+        const oldCounter =
+            "{{ old('counter_id') }}";
 
+        if (oldCounter) {
 
+            counter.value =
+                oldCounter;
+        }
 
-<div class="col-md-6 mb-3">
+    }
 
-<label>Role</label>
 
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE FIELDS
+    |--------------------------------------------------------------------------
+    */
 
-<select name="role"
-class="form-control"
-required>
+    function updateFields() {
 
+        outletField.style.display = 'none';
 
-<option value="admin"
-@if(request('role')=='admin') selected @endif>
+        counterField.style.display = 'none';
 
-Admin
+        trainingField.style.display = 'none';
 
-</option>
+        specialtiesField.style.display = 'none';
 
 
+        outlet.required = false;
 
-<option value="manager"
-@if(request('role')=='manager') selected @endif>
+        counter.required = false;
 
-Manager
+        trainingStart.required = false;
 
-</option>
+        trainingEnd.required = false;
 
 
+        /*
+        | CASHIER
+        */
 
-<option value="chef"
-@if(request('role')=='chef') selected @endif>
+        if (role.value === 'cashier') {
 
-Chef
+            outletField.style.display = 'block';
 
-</option>
+            outlet.required = true;
 
+        }
 
 
-<option value="cashier"
-@if(request('role')=='cashier') selected @endif>
+        /*
+        | CHEF
+        */
 
-Cashier
+        if (role.value === 'chef') {
 
-</option>
+            outletField.style.display = 'block';
 
+            counterField.style.display = 'block';
 
+            trainingField.style.display = 'block';
 
-</select>
+            specialtiesField.style.display = 'block';
 
 
-</div>
+            outlet.required = true;
 
+            counter.required = true;
 
+            trainingStart.required = true;
 
+            trainingEnd.required = true;
 
-<div class="col-md-6 mb-3">
 
-<label>Profile Image</label>
+            loadCounters();
 
+        }
 
-<input type="file"
-name="profile_image"
-class="form-control">
 
-</div>
+        /*
+        | ADMIN / MANAGER
+        */
 
+        if (
+            role.value === 'admin' ||
+            role.value === 'manager'
+        ) {
 
+            outlet.value = '';
 
+            counter.value = '';
 
+            trainingStart.value = '';
 
-<div class="col-md-6 mb-3">
+            trainingEnd.value = '';
 
-<label>Outlet</label>
+        }
 
+    }
 
-<select name="outlet_id"
-class="form-control">
 
+    /*
+    |--------------------------------------------------------------------------
+    | ROLE CHANGE
+    |--------------------------------------------------------------------------
+    */
 
-<option value="">Select Outlet</option>
+    role.addEventListener(
+        'change',
+        function () {
 
+            updateFields();
 
-@foreach(\App\Models\Outlet::all() as $outlet)
+        }
+    );
 
-<option value="{{$outlet->id}}">
 
-{{$outlet->name}}
+    /*
+    |--------------------------------------------------------------------------
+    | OUTLET CHANGE
+    |--------------------------------------------------------------------------
+    */
 
-</option>
+    outlet.addEventListener(
+        'change',
+        function () {
 
-@endforeach
+            if (role.value === 'chef') {
 
+                loadCounters();
 
-</select>
+            }
 
+        }
+    );
 
-</div>
 
+    /*
+    |--------------------------------------------------------------------------
+    | TRAINING DATE VALIDATION
+    |--------------------------------------------------------------------------
+    */
 
+    trainingEnd.addEventListener(
+        'change',
+        function () {
 
+            if (
+                trainingStart.value &&
+                trainingEnd.value &&
+                trainingEnd.value <
+                trainingStart.value
+            ) {
 
-<div class="col-md-6 mb-3">
+                alert(
+                    'Training End Date cannot be before Start Date.'
+                );
 
-<label>Counter</label>
+                trainingEnd.value = '';
 
+            }
 
-<select name="counter_id"
-class="form-control">
+        }
+    );
 
 
-<option value="">Select Counter</option>
+    /*
+    |--------------------------------------------------------------------------
+    | INITIAL LOAD
+    |--------------------------------------------------------------------------
+    */
 
+    updateFields();
 
-@foreach(\App\Models\Counter::all() as $counter)
+});
 
-<option value="{{$counter->id}}">
+</script>
 
-{{$counter->name}}
-
-</option>
-
-@endforeach
-
-
-</select>
-
-
-</div>
-
-
-
-</div>
-
-
-
-<button class="btn btn-save px-4">
-
-<i class="fa fa-save"></i>
-
-Save Staff
-
-</button>
-
-
-<a href="{{route('users.index')}}"
-class="btn btn-secondary">
-
-Back
-
-</a>
-
-
-
-</form>
-
-
-
-</div>
-
-
-</div>
-
-
-
-</body>
-
-</html>
+@endpush

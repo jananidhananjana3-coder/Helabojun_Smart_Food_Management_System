@@ -1,445 +1,844 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.admin')
 
-<head>
+@section('title', 'Edit Staff')
 
-<title>Edit Staff</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
+@push('styles')
 
 <style>
 
-body{
-    background:#f5f7fb;
-}
+    .card-box {
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px #ddd;
+    }
 
+    .title {
+        color: #075e3b;
+        font-weight: bold;
+    }
 
-.card-box{
+    .btn-save {
+        background: #075e3b;
+        color: white;
+    }
 
-    background:white;
+    .btn-save:hover {
+        background: #0b8050;
+        color: white;
+    }
 
-    padding:35px;
-
-    border-radius:15px;
-
-    box-shadow:0 5px 15px #ddd;
-
-}
-
-
-.title{
-
-    color:#075e3b;
-
-    font-weight:bold;
-
-}
-
-
-.btn-update{
-
-    background:#075e3b;
-
-    color:white;
-
-}
-
-
-.btn-update:hover{
-
-    background:#0b8050;
-
-    color:white;
-
-}
-
-
-.profile-img{
-
-    width:120px;
-
-    height:120px;
-
-    border-radius:50%;
-
-    object-fit:cover;
-
-    border:4px solid #075e3b;
-
-}
-
+    .current-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #075e3b;
+    }
 
 </style>
 
-
-</head>
-
+@endpush
 
 
-<body>
-
-
-<div class="container mt-5">
-
+@section('content')
 
 <div class="card-box">
 
+    <h2 class="title">
+        <i class="fa fa-user-edit"></i>
+        Edit Staff
+    </h2>
 
-<h2 class="title">
-
-<i class="fa fa-user-edit"></i>
-
-Edit Staff Profile
-
-</h2>
+    <hr>
 
 
-<hr>
+    {{-- ERRORS --}}
+
+    @if($errors->any())
+
+        <div class="alert alert-danger">
+
+            <ul class="mb-0">
+
+                @foreach($errors->all() as $error)
+
+                    <li>{{ $error }}</li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
+
+    @endif
 
 
+    <form action="{{ route('users.update', $user->id) }}"
+          method="POST"
+          enctype="multipart/form-data">
 
-<form action="{{ route('users.update',$user->id) }}"
-method="POST"
-enctype="multipart/form-data">
+        @csrf
 
-
-@csrf
-
-@method('PUT')
+        @method('PUT')
 
 
+        <div class="row">
 
 
-<div class="text-center mb-4">
+            {{-- NAME --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Name
+                </label>
+
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       value="{{ old('name', $user->name) }}"
+                       required>
+
+            </div>
 
 
-@if($user->profile_image)
+            {{-- EMAIL --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input type="email"
+                       name="email"
+                       class="form-control"
+                       value="{{ old('email', $user->email) }}"
+                       required>
+
+            </div>
 
 
-<img src="{{asset('storage/'.$user->profile_image)}}"
-class="profile-img">
+            {{-- PASSWORD --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    New Password
+                </label>
+
+                <input type="password"
+                       name="password"
+                       class="form-control">
+
+                <small class="text-muted">
+                    Leave empty to keep current password.
+                </small>
+
+            </div>
 
 
-@else
+            {{-- PHONE --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Phone
+                </label>
+
+                <input type="text"
+                       name="phone"
+                       class="form-control"
+                       value="{{ old('phone', $user->phone) }}">
+
+            </div>
 
 
-<img src="https://ui-avatars.com/api/?name={{$user->name}}"
-class="profile-img">
+            {{-- NIC --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    NIC Number
+                </label>
+
+                <input type="text"
+                       name="nic_number"
+                       class="form-control"
+                       value="{{ old('nic_number', $user->nic_number) }}">
+
+            </div>
 
 
-@endif
+            {{-- BIRTHDAY --}}
 
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Birthday
+                </label>
+
+                <input type="date"
+                       name="birthday"
+                       class="form-control"
+                       value="{{ old('birthday', $user->birthday) }}">
+
+            </div>
+
+
+            {{-- ADDRESS --}}
+
+            <div class="col-md-12 mb-3">
+
+                <label class="form-label">
+                    Address
+                </label>
+
+                <textarea name="address"
+                          class="form-control"
+                          rows="3">{{ old('address', $user->address) }}</textarea>
+
+            </div>
+
+
+            {{-- JOIN DATE --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Join Date
+                </label>
+
+                <input type="date"
+                       name="join_date"
+                       class="form-control"
+                       value="{{ old('join_date', $user->join_date) }}">
+
+            </div>
+
+
+            {{-- ROLE --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Role
+                </label>
+
+                <select name="role"
+                        id="role"
+                        class="form-control"
+                        required>
+
+                    <option value="admin"
+                        {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>
+                        Admin
+                    </option>
+
+                    <option value="manager"
+                        {{ old('role', $user->role) == 'manager' ? 'selected' : '' }}>
+                        Manager
+                    </option>
+
+                    <option value="chef"
+                        {{ old('role', $user->role) == 'chef' ? 'selected' : '' }}>
+                        Chef
+                    </option>
+
+                    <option value="cashier"
+                        {{ old('role', $user->role) == 'cashier' ? 'selected' : '' }}>
+                        Cashier
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            {{-- PROFILE IMAGE --}}
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Profile Image
+                </label>
+
+
+                @if($user->profile_image)
+
+                    <div class="mb-2">
+
+                        <img
+                            src="{{ asset('storage/' . $user->profile_image) }}"
+                            class="current-image"
+                            alt="Current Profile Image">
+
+                    </div>
+
+                @endif
+
+
+                <input type="file"
+                       name="profile_image"
+                       class="form-control">
+
+            </div>
+
+
+            {{-- OUTLET --}}
+
+            <div class="col-md-6 mb-3"
+                 id="outletField">
+
+                <label class="form-label">
+                    Outlet
+                </label>
+
+                <select name="outlet_id"
+                        id="outlet_id"
+                        class="form-control">
+
+                    <option value="">
+                        Select Outlet
+                    </option>
+
+                    @foreach($outlets as $outlet)
+
+                        <option value="{{ $outlet->id }}"
+                            {{ old('outlet_id', $user->outlet_id) == $outlet->id ? 'selected' : '' }}>
+
+                            {{ $outlet->outlet_name }}
+
+                        </option>
+
+                    @endforeach
+
+                </select>
+
+            </div>
+
+
+            {{-- COUNTER --}}
+
+            <div class="col-md-6 mb-3"
+                 id="counterField">
+
+                <label class="form-label">
+                    Counter
+                </label>
+
+                <select name="counter_id"
+                        id="counter_id"
+                        class="form-control">
+
+                    <option value="">
+                        Select Counter
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            {{-- TRAINING PERIOD --}}
+
+            <div class="col-md-6 mb-3"
+                 id="trainingField"
+                 style="display:none;">
+
+                <label class="form-label">
+                    Training Period
+                </label>
+
+                <input type="text"
+                       name="training_period"
+                       id="training_period"
+                       class="form-control"
+                       value="{{ old('training_period', $user->training_period) }}"
+                       placeholder="Example: 2026-08-01 to 2026-08-31">
+
+                <small class="text-muted">
+                    Enter Chef training period.
+                </small>
+
+            </div>
+
+
+            {{-- FOOD SPECIALTIES --}}
+
+            <div class="col-md-6 mb-3"
+                 id="specialtiesField"
+                 style="display:none;">
+
+                <label class="form-label">
+                    Food Specialties
+                </label>
+
+                <textarea name="food_specialties"
+                          id="food_specialties"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Example: Rice & Curry, Hoppers, String Hoppers">{{ old('food_specialties', $user->food_specialties) }}</textarea>
+
+            </div>
+
+
+        </div>
+
+
+        {{-- UPDATE BUTTON --}}
+
+        <button type="submit"
+                class="btn btn-save px-4">
+
+            <i class="fa fa-save"></i>
+
+            Update Staff
+
+        </button>
+
+
+        {{-- BACK BUTTON --}}
+
+        <a href="{{ route('users.index') }}"
+           class="btn btn-secondary">
+
+            <i class="fa fa-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </form>
 
 </div>
 
+@endsection
 
 
+@push('scripts')
 
+<script>
 
-<div class="row">
+document.addEventListener('DOMContentLoaded', function () {
 
+    /*
+    |--------------------------------------------------------------------------
+    | GET ELEMENTS
+    |--------------------------------------------------------------------------
+    */
 
+    const role = document.getElementById('role');
 
-<div class="col-md-6 mb-3">
+    const outlet = document.getElementById('outlet_id');
 
-<label>Name</label>
+    const counter = document.getElementById('counter_id');
 
+    const outletField =
+        document.getElementById('outletField');
 
-<input type="text"
-name="name"
-class="form-control"
-value="{{old('name',$user->name)}}"
-required>
+    const counterField =
+        document.getElementById('counterField');
 
+    const trainingField =
+        document.getElementById('trainingField');
 
-</div>
+    const specialtiesField =
+        document.getElementById('specialtiesField');
 
+    const training =
+        document.getElementById('training_period');
 
+    const specialties =
+        document.getElementById('food_specialties');
 
 
-<div class="col-md-6 mb-3">
+    /*
+    |--------------------------------------------------------------------------
+    | COUNTERS FROM CONTROLLER
+    |--------------------------------------------------------------------------
+    |
+    | Laravel 10 safe JavaScript conversion.
+    |
+    */
 
-<label>Email</label>
+    const allCounters =
+        {{ Illuminate\Support\Js::from($counterData) }};
 
 
-<input type="email"
-name="email"
-class="form-control"
-value="{{old('email',$user->email)}}"
-required>
+    /*
+    |--------------------------------------------------------------------------
+    | CURRENT COUNTER
+    |--------------------------------------------------------------------------
+    */
 
+    const existingCounter =
+        "{{ old('counter_id', $user->counter_id ?? '') }}";
 
-</div>
 
+    /*
+    |--------------------------------------------------------------------------
+    | FILTER COUNTERS
+    |--------------------------------------------------------------------------
+    */
 
+    function filterCounters() {
 
+        const selectedOutlet =
+            String(outlet.value || '');
 
-<div class="col-md-6 mb-3">
+        /*
+        | If user changes outlet, keep current selected counter
+        | only if it belongs to that outlet.
+        */
 
-<label>Phone</label>
+        let currentCounter =
+            String(counter.value || '');
 
+        if (!currentCounter) {
 
-<input type="text"
-name="phone"
-class="form-control"
-value="{{old('phone',$user->phone)}}">
+            currentCounter =
+                String(existingCounter || '');
 
+        }
 
-</div>
 
+        /*
+        |--------------------------------------------------------------------------
+        | Reset Counter Dropdown
+        |--------------------------------------------------------------------------
+        */
 
+        counter.innerHTML = '';
 
 
-<div class="col-md-6 mb-3">
+        const defaultOption =
+            document.createElement('option');
 
-<label>NIC Number</label>
+        defaultOption.value = '';
 
+        defaultOption.textContent =
+            'Select Counter';
 
-<input type="text"
-name="nic_number"
-class="form-control"
-value="{{old('nic_number',$user->nic_number)}}">
+        counter.appendChild(defaultOption);
 
 
-</div>
+        /*
+        |--------------------------------------------------------------------------
+        | No Outlet
+        |--------------------------------------------------------------------------
+        */
 
+        if (!selectedOutlet) {
 
+            return;
 
+        }
 
 
-<div class="col-md-6 mb-3">
+        /*
+        |--------------------------------------------------------------------------
+        | Filter
+        |--------------------------------------------------------------------------
+        */
 
-<label>Birthday</label>
+        allCounters.forEach(function (item) {
 
+            const itemOutlet =
+                String(item.outlet_id || '');
 
-<input type="date"
-name="birthday"
-class="form-control"
-value="{{ $user->birthday }}">
+            const itemStatus =
+                String(item.status || '')
+                    .toLowerCase();
 
 
-</div>
+            /*
+            |--------------------------------------------------------------------------
+            | Selected Outlet + Active Counter
+            |--------------------------------------------------------------------------
+            */
 
+            if (
+                itemOutlet === selectedOutlet &&
+                itemStatus === 'active'
+            ) {
 
+                const option =
+                    document.createElement('option');
 
 
+                option.value =
+                    item.id;
 
-<div class="col-md-6 mb-3">
 
-<label>Join Date</label>
+                /*
+                |--------------------------------------------------------------------------
+                | Counter Name
+                |--------------------------------------------------------------------------
+                */
 
+                let counterText =
+                    item.name || 'Counter';
 
-<input type="date"
-name="join_date"
-class="form-control"
-value="{{ $user->join_date }}">
 
+                /*
+                |--------------------------------------------------------------------------
+                | Counter Number
+                |--------------------------------------------------------------------------
+                */
 
-</div>
+                if (item.number) {
 
+                    counterText +=
+                        ' - ' + item.number;
 
+                }
 
 
+                option.textContent =
+                    counterText;
 
-<div class="col-md-12 mb-3">
 
-<label>Address</label>
+                /*
+                |--------------------------------------------------------------------------
+                | Existing Counter
+                |--------------------------------------------------------------------------
+                */
 
+                if (
+                    String(item.id) ===
+                    currentCounter
+                ) {
 
-<textarea name="address"
-class="form-control"
-rows="3">{{old('address',$user->address)}}</textarea>
+                    option.selected =
+                        true;
 
+                }
 
-</div>
 
+                counter.appendChild(option);
 
+            }
 
+        });
 
+    }
 
-<div class="col-md-6 mb-3">
 
-<label>Role</label>
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE FIELDS BASED ON ROLE
+    |--------------------------------------------------------------------------
+    */
 
+    function updateFields() {
 
-<select name="role"
-class="form-control">
+        /*
+        |--------------------------------------------------------------------------
+        | Hide all conditional fields
+        |--------------------------------------------------------------------------
+        */
 
+        outletField.style.display =
+            'none';
 
-<option value="admin"
-{{$user->role=='admin'?'selected':''}}>
+        counterField.style.display =
+            'none';
 
-Admin
+        trainingField.style.display =
+            'none';
 
-</option>
+        specialtiesField.style.display =
+            'none';
 
 
-<option value="manager"
-{{$user->role=='manager'?'selected':''}}>
+        /*
+        |--------------------------------------------------------------------------
+        | Remove required
+        |--------------------------------------------------------------------------
+        */
 
-Manager
+        outlet.required =
+            false;
 
-</option>
+        counter.required =
+            false;
 
+        training.required =
+            false;
 
+        specialties.required =
+            false;
 
-<option value="chef"
-{{$user->role=='chef'?'selected':''}}>
 
-Chef
+        /*
+        |--------------------------------------------------------------------------
+        | CASHIER
+        |--------------------------------------------------------------------------
+        */
 
-</option>
+        if (
+            role.value === 'cashier'
+        ) {
 
+            outletField.style.display =
+                'block';
 
+            outlet.required =
+                true;
 
-<option value="cashier"
-{{$user->role=='cashier'?'selected':''}}>
+            /*
+            | Counter is not required for cashier.
+            */
 
-Cashier
+            counter.required =
+                false;
 
-</option>
+        }
 
 
-</select>
+        /*
+        |--------------------------------------------------------------------------
+        | CHEF
+        |--------------------------------------------------------------------------
+        */
 
+        if (
+            role.value === 'chef'
+        ) {
 
-</div>
+            outletField.style.display =
+                'block';
 
+            counterField.style.display =
+                'block';
 
+            trainingField.style.display =
+                'block';
 
+            specialtiesField.style.display =
+                'block';
 
 
-<div class="col-md-6 mb-3">
+            /*
+            | Required fields.
+            */
 
+            outlet.required =
+                true;
 
-<label>Change Profile Image</label>
+            counter.required =
+                true;
 
+            training.required =
+                true;
 
-<input type="file"
-name="profile_image"
-class="form-control">
+            specialties.required =
+                true;
 
 
-</div>
+            /*
+            | Load counters.
+            */
 
+            filterCounters();
 
+        }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | ADMIN / MANAGER
+        |--------------------------------------------------------------------------
+        */
 
-<div class="col-md-6 mb-3">
+        if (
+            role.value === 'admin' ||
+            role.value === 'manager'
+        ) {
 
-<label>Outlet</label>
+            outlet.value =
+                '';
 
+            counter.value =
+                '';
 
-<select name="outlet_id"
-class="form-control">
+        }
 
+    }
 
-<option value="">Select Outlet</option>
 
+    /*
+    |--------------------------------------------------------------------------
+    | ROLE CHANGE
+    |--------------------------------------------------------------------------
+    */
 
-@foreach(\App\Models\Outlet::all() as $outlet)
+    role.addEventListener(
+        'change',
+        function () {
 
+            updateFields();
 
-<option value="{{$outlet->id}}"
+        }
+    );
 
-{{$user->outlet_id==$outlet->id?'selected':''}}>
 
+    /*
+    |--------------------------------------------------------------------------
+    | OUTLET CHANGE
+    |--------------------------------------------------------------------------
+    */
 
-{{$outlet->name}}
+    outlet.addEventListener(
+        'change',
+        function () {
 
+            /*
+            | Clear counter when outlet changes.
+            */
 
-</option>
+            counter.value = '';
 
 
-@endforeach
+            if (
+                role.value === 'chef'
+            ) {
 
+                filterCounters();
 
-</select>
+            }
 
+        }
+    );
 
-</div>
 
+    /*
+    |--------------------------------------------------------------------------
+    | INITIAL LOAD
+    |--------------------------------------------------------------------------
+    */
 
+    updateFields();
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | CHEF INITIAL LOAD
+    |--------------------------------------------------------------------------
+    */
 
-<div class="col-md-6 mb-3">
+    if (
+        role.value === 'chef'
+    ) {
 
-<label>Counter</label>
+        filterCounters();
 
+    }
 
-<select name="counter_id"
-class="form-control">
+});
 
+</script>
 
-<option value="">Select Counter</option>
-
-
-@foreach(\App\Models\Counter::all() as $counter)
-
-
-<option value="{{$counter->id}}"
-
-{{$user->counter_id==$counter->id?'selected':''}}>
-
-
-{{$counter->name}}
-
-
-</option>
-
-
-@endforeach
-
-
-</select>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<button class="btn btn-update px-4">
-
-
-<i class="fa fa-save"></i>
-
-Update Staff
-
-
-</button>
-
-
-
-<a href="{{route('users.index')}}"
-class="btn btn-secondary">
-
-Back
-
-</a>
-
-
-
-</form>
-
-
-</div>
-
-
-</div>
-
-
-
-</body>
-
-</html>
+@endpush

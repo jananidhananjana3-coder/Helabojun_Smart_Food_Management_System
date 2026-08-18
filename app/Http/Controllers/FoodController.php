@@ -5,170 +5,464 @@ namespace App\Http\Controllers;
 use App\Models\Food;
 use App\Models\Category;
 use App\Models\Outlet;
+use App\Models\Counter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class FoodController extends Controller
 {
-
+    /**
+     * Display all foods.
+     */
     public function index()
     {
-        $foods = Food::with(['category','outlet'])->latest()->get();
+        $foods = Food::with([
+            'category',
+            'outlet',
+            'counters'
+        ])
+        ->latest()
+        ->get();
 
-        return view('foods.index', compact('foods'));
+        return view(
+            'foods.index',
+            compact('foods')
+        );
     }
 
 
+    /**
+     * Show create food form.
+     */
     public function create()
     {
-        $categories = Category::all();
-        $outlets = Outlet::all();
+        $categories = Category::orderBy('category_name')
+            ->get();
 
-        return view('foods.create', compact('categories','outlets'));
+        $outlets = Outlet::where('status', 'active')
+            ->orderBy('outlet_name')
+            ->get();
+
+        $counters = Counter::where('status', 'active')
+            ->orderBy('outlet_id')
+            ->orderBy('counter_number')
+            ->get();
+
+        return view(
+            'foods.create',
+            compact(
+                'categories',
+                'outlets',
+                'counters'
+            )
+        )->with('editing', false);
     }
 
 
+    /**
+     * Store a new food.
+     */
     public function store(Request $request)
     {
+        $data = $request->validate([
 
-        $request->validate([
+            'category_id' =>
+                'required|exists:categories,id',
 
-            'category_id' => 'required',
-            'outlet_id' => 'required',
-            'food_name' => 'required|string|max:255',
-            'description' => 'nullable',
-            'price' => 'required|numeric',
-            'available_quantity' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'outlet_id' =>
+                'required|exists:outlets,id',
 
+            'food_name' =>
+                'required|string|max:255',
+
+            'description' =>
+                'nullable|string',
+
+            'price' =>
+                'required|numeric|min:0',
+
+            'image' =>
+                'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+
+            'counter_quantities' =>
+                'required|array|min:1',
+
+            'counter_quantities.*' =>
+                'required|integer|min:0',
         ]);
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validate counters
+        |--------------------------------------------------------------------------
+        */
+
+        $validCounters = Counter::where(
+                'outlet_id',
+                $data['outlet_id']
+            )
+            ->where('status', 'active')
+            ->whereIn(
+                'id',
+                array_keys($data['counter_quantities'])
+            )
+            ->pluck('id')
+            ->all();
+
+
+        if (
+            count($validCounters) !==
+            count($data['counter_quantities'])
+        ) {
+
+            return back()
+                ->withErrors([
+                    'counter_quantities' =>
+                        'Select only active counters belonging to the selected outlet.'
+                ])
+                ->withInput();
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Upload image
+        |--------------------------------------------------------------------------
+        */
 
         $image = null;
 
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
 
-            $image = $request->file('image')->store('foods','public');
-
+            $image = $request
+                ->file('image')
+                ->store('foods', 'public');
         }
 
 
-        Food::create([
+        /*
+        |--------------------------------------------------------------------------
+        | Create food + counter quantities
+        |--------------------------------------------------------------------------
+        */
 
-            'category_id' => $request->category_id,
-            'outlet_id' => $request->outlet_id,
-            'food_name' => $request->food_name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'available_quantity' => $request->available_quantity,
-            'image' => $image,
+        DB::transaction(function () use (
+            $data,
+            $image
+        ) {
 
-        ]);
+            $food = Food::create([
 
+                'category_id' =>
+                    $data['category_id'],
 
-        return redirect()
-                ->route('foods.index')
-                ->with('success','Food Added Successfully.');
+                'outlet_id' =>
+                    $data['outlet_id'],
 
-    }
+                'food_name' =>
+                    $data['food_name'],
 
+                'description' =>
+                    $data['description'] ?? null,
 
+                'price' =>
+                    $data['price'],
 
-    public function edit(string $id)
-    {
+                /*
+                 * Admin does NOT control operational quantity.
+                 * Chef controls quantity per counter.
+                 */
+                'available_quantity' => 0,
 
-        $food = Food::findOrFail($id);
-
-        $categories = Category::all();
-
-        $outlets = Outlet::all();
-
-        return view('foods.edit', compact(
-            'food',
-            'categories',
-            'outlets'
-        ));
-
-    }
-
-
-
-    public function update(Request $request, string $id)
-    {
-
-        $request->validate([
-
-            'category_id' => 'required',
-            'outlet_id' => 'required',
-            'food_name' => 'required|string|max:255',
-            'description' => 'nullable',
-            'price' => 'required|numeric',
-            'available_quantity' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-
-        ]);
+                'image' =>
+                    $image,
+            ]);
 
 
-        $food = Food::findOrFail($id);
+            $sync = [];
 
+            foreach (
+                $data['counter_quantities']
+                as $counterId => $quantity
+            ) {
 
-        $image = $food->image;
-
-
-        if($request->hasFile('image')){
-
-            if($food->image){
-
-                Storage::disk('public')->delete($food->image);
-
+                $sync[$counterId] = [
+                    'quantity' =>
+                        (int) $quantity
+                ];
             }
 
-            $image = $request->file('image')->store('foods','public');
 
-        }
-
-
-        $food->update([
-
-            'category_id' => $request->category_id,
-            'outlet_id' => $request->outlet_id,
-            'food_name' => $request->food_name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'available_quantity' => $request->available_quantity,
-            'image' => $image,
-
-        ]);
+            $food->counters()->sync($sync);
+        });
 
 
         return redirect()
-                ->route('foods.index')
-                ->with('success','Food Updated Successfully.');
-
+            ->route('foods.index')
+            ->with(
+                'success',
+                'Food created successfully. Operational quantity is controlled by the chef per counter.'
+            );
     }
 
 
-
-    public function destroy(string $id)
+    /**
+     * Show a single food.
+     */
+    public function show(Food $food)
     {
+        $food->load([
+            'category',
+            'outlet',
+            'counters'
+        ]);
 
-        $food = Food::findOrFail($id);
+        return view(
+            'foods.show',
+            compact('food')
+        );
+    }
 
 
-        if($food->image){
+    /**
+     * Show edit food form.
+     */
+    public function edit(Food $food)
+    {
+        $food->load('counters');
 
-            Storage::disk('public')->delete($food->image);
 
+        $categories = Category::orderBy(
+            'category_name'
+        )->get();
+
+
+        $outlets = Outlet::where(
+                'status',
+                'active'
+            )
+            ->orderBy('outlet_name')
+            ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Only active counters belonging to current outlet
+        |--------------------------------------------------------------------------
+        */
+
+        $counters = Counter::where(
+                'outlet_id',
+                $food->outlet_id
+            )
+            ->where('status', 'active')
+            ->orderBy('counter_number')
+            ->get();
+
+
+        return view(
+            'foods.create',
+            compact(
+                'food',
+                'categories',
+                'outlets',
+                'counters'
+            )
+        )->with(
+            'editing',
+            true
+        );
+    }
+
+
+    /**
+     * Update an existing food.
+     */
+    public function update(
+        Request $request,
+        Food $food
+    ) {
+
+        $data = $request->validate([
+
+            'category_id' =>
+                'required|exists:categories,id',
+
+            'outlet_id' =>
+                'required|exists:outlets,id',
+
+            'food_name' =>
+                'required|string|max:255',
+
+            'description' =>
+                'nullable|string',
+
+            'price' =>
+                'required|numeric|min:0',
+
+            'image' =>
+                'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+
+            'counter_quantities' =>
+                'required|array|min:1',
+
+            'counter_quantities.*' =>
+                'required|integer|min:0',
+        ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validate selected counters
+        |--------------------------------------------------------------------------
+        */
+
+        $validCounters = Counter::where(
+                'outlet_id',
+                $data['outlet_id']
+            )
+            ->where('status', 'active')
+            ->whereIn(
+                'id',
+                array_keys($data['counter_quantities'])
+            )
+            ->pluck('id')
+            ->all();
+
+
+        if (
+            count($validCounters) !==
+            count($data['counter_quantities'])
+        ) {
+
+            return back()
+                ->withErrors([
+                    'counter_quantities' =>
+                        'Select only active counters belonging to the selected outlet.'
+                ])
+                ->withInput();
         }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update image
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('image')) {
+
+            if ($food->image) {
+
+                Storage::disk('public')
+                    ->delete($food->image);
+            }
+
+
+            $food->image = $request
+                ->file('image')
+                ->store('foods', 'public');
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update food + counter quantities
+        |--------------------------------------------------------------------------
+        */
+
+        DB::transaction(function () use (
+            $food,
+            $data
+        ) {
+
+            $food->update([
+
+                'category_id' =>
+                    $data['category_id'],
+
+                'outlet_id' =>
+                    $data['outlet_id'],
+
+                'food_name' =>
+                    $data['food_name'],
+
+                'description' =>
+                    $data['description'] ?? null,
+
+                'price' =>
+                    $data['price'],
+            ]);
+
+
+            $sync = [];
+
+            foreach (
+                $data['counter_quantities']
+                as $counterId => $quantity
+            ) {
+
+                $sync[$counterId] = [
+                    'quantity' =>
+                        (int) $quantity
+                ];
+            }
+
+
+            $food->counters()->sync($sync);
+        });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Save image change
+        |--------------------------------------------------------------------------
+        */
+
+        if ($food->isDirty('image')) {
+            $food->save();
+        }
+
+
+        return redirect()
+            ->route('foods.index')
+            ->with(
+                'success',
+                'Food updated successfully.'
+            );
+    }
+
+
+    /**
+     * Delete a food.
+     */
+    public function destroy(Food $food)
+    {
+        if ($food->image) {
+
+            Storage::disk('public')
+                ->delete($food->image);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Remove counter assignments first
+        |--------------------------------------------------------------------------
+        */
+
+        $food->counters()->detach();
 
 
         $food->delete();
 
 
-        return redirect()
-                ->route('foods.index')
-                ->with('success','Food Deleted Successfully.');
-
+        return back()
+            ->with(
+                'success',
+                'Food deleted successfully.'
+            );
     }
-
 }

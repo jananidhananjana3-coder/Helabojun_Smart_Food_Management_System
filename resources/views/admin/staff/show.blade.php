@@ -1,323 +1,336 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.admin')
 
-<head>
+@section('title', 'Staff Profile')
 
-<title>Staff Profile</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
+@push('styles')
 
 <style>
 
+    .profile-card {
 
-body{
+        background: white;
 
-    background:#f5f7fb;
+        border-radius: 20px;
 
-}
+        padding: 30px;
 
+        box-shadow: 0 5px 20px #ddd;
 
-.profile-card{
-
-    background:white;
-
-    border-radius:20px;
-
-    padding:30px;
-
-    box-shadow:0 5px 20px #ddd;
-
-}
+    }
 
 
-.profile-image{
+    .profile-image {
 
-    width:160px;
+        width: 160px;
 
-    height:160px;
+        height: 160px;
 
-    border-radius:50%;
+        border-radius: 50%;
 
-    object-fit:cover;
+        object-fit: cover;
 
-    border:5px solid #075e3b;
+        border: 5px solid #075e3b;
 
-}
-
-
-.title{
-
-    color:#075e3b;
-
-    font-weight:bold;
-
-}
+    }
 
 
-.info-box{
+    .title {
 
-    background:#f8f9fa;
+        color: #075e3b;
 
-    padding:15px;
+        font-weight: bold;
 
-    border-radius:10px;
-
-    margin-bottom:15px;
-
-}
+    }
 
 
-.icon{
+    .info-box {
 
-    color:#075e3b;
+        background: #f8f9fa;
 
-    width:25px;
+        padding: 15px;
 
-}
+        border-radius: 10px;
 
+        margin-bottom: 15px;
 
-.btn-back{
-
-    background:#075e3b;
-
-    color:white;
-
-}
+    }
 
 
-.btn-back:hover{
+    .icon {
 
-    background:#064b30;
+        color: #075e3b;
 
-    color:white;
+        width: 25px;
 
-}
+    }
 
+
+    .btn-back {
+
+        background: #075e3b;
+
+        color: white;
+
+    }
+
+
+    .btn-back:hover {
+
+        background: #064b30;
+
+        color: white;
+
+    }
 
 </style>
 
-
-</head>
-
-
-<body>
+@endpush
 
 
-<div class="container mt-5">
+@section('content')
 
 
 <div class="profile-card">
 
 
-<div class="text-center">
+    <div class="text-center">
 
 
-@if($user->profile_image)
+        @if($user->profile_image)
+
+            <img src="{{ asset('storage/'.$user->profile_image) }}"
+                 class="profile-image">
+
+        @else
+
+            <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=160"
+                 class="profile-image">
+
+        @endif
 
 
-<img src="{{ asset('storage/'.$user->profile_image) }}" 
-class="profile-image">
+        <h2 class="mt-3 title">
+
+            {{ $user->name }}
+
+        </h2>
 
 
-@else
+        <span class="badge bg-success">
+
+            {{ ucfirst($user->role) }}
+
+        </span>
 
 
-<img src="https://via.placeholder.com/160"
-class="profile-image">
+    </div>
 
 
-@endif
+    <hr>
 
 
-
-<h2 class="mt-3 title">
-
-{{ $user->name }}
-
-</h2>
+    <div class="row mt-4">
 
 
-<span class="badge bg-success">
+        <!-- LEFT -->
 
-{{ ucfirst($user->role) }}
+        <div class="col-md-6">
 
-</span>
+
+            <div class="info-box">
+
+                <i class="fa fa-envelope icon"></i>
+
+                <strong>Email:</strong>
+
+                <br>
+
+                {{ $user->email }}
+
+            </div>
+
+
+            <div class="info-box">
+
+                <i class="fa fa-phone icon"></i>
+
+                <strong>Phone:</strong>
+
+                <br>
+
+                {{ $user->phone ?? 'N/A' }}
+
+            </div>
+
+
+            <div class="info-box">
+
+                <i class="fa fa-id-card icon"></i>
+
+                <strong>NIC Number:</strong>
+
+                <br>
+
+                {{ $user->nic_number ?? 'N/A' }}
+
+            </div>
+
+
+            <div class="info-box">
+
+                <i class="fa fa-calendar icon"></i>
+
+                <strong>Birthday:</strong>
+
+                <br>
+
+                {{ $user->birthday ?? 'N/A' }}
+
+            </div>
+
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <div class="col-md-6">
+
+
+            <div class="info-box">
+
+                <i class="fa fa-location-dot icon"></i>
+
+                <strong>Address:</strong>
+
+                <br>
+
+                {{ $user->address ?? 'N/A' }}
+
+            </div>
+
+
+            <div class="info-box">
+
+                <i class="fa fa-calendar-check icon"></i>
+
+                <strong>Join Date:</strong>
+
+                <br>
+
+                {{ $user->join_date ?? 'N/A' }}
+
+            </div>
+
+
+            <!-- OUTLET -->
+
+            <div class="info-box">
+
+                <i class="fa fa-store icon"></i>
+
+                <strong>Outlet:</strong>
+
+                <br>
+
+                @if($user->outlet)
+
+                    {{ $user->outlet->outlet_name }}
+
+                @else
+
+                    N/A
+
+                @endif
+
+            </div>
+
+
+            <!-- COUNTER -->
+
+            <div class="info-box">
+
+                <i class="fa fa-desktop icon"></i>
+
+                <strong>Counter:</strong>
+
+                <br>
+
+                @if($user->counter)
+
+                    Counter {{ $user->counter->counter_number }}
+
+                    @if($user->counter->counter_name)
+
+                        - {{ $user->counter->counter_name }}
+
+                    @endif
+
+                @else
+
+                    N/A
+
+                @endif
+
+            </div>
+
+
+            <!-- TRAINING PERIOD -->
+
+            @if($user->role === 'chef')
+
+                <div class="info-box">
+
+                    <i class="fa fa-graduation-cap icon"></i>
+
+                    <strong>Training Period:</strong>
+
+                    <br>
+
+                    {{ $user->training_period ?? 'N/A' }}
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <i class="fa fa-utensils icon"></i>
+
+                    <strong>Food Specialties:</strong>
+
+                    <br>
+
+                    {{ $user->food_specialties ?? 'N/A' }}
+
+                </div>
+
+            @endif
+
+
+        </div>
+
+
+    </div>
+
+
+    <div class="text-center mt-4">
+
+
+        <a href="{{ route('users.index') }}"
+           class="btn btn-back px-5">
+
+            <i class="fa fa-arrow-left"></i>
+
+            Back
+
+        </a>
+
+
+    </div>
 
 
 </div>
 
 
-
-<hr>
-
-
-<div class="row mt-4">
-
-
-<div class="col-md-6">
-
-
-<div class="info-box">
-
-<i class="fa fa-envelope icon"></i>
-
-<strong>Email:</strong>
-
-<br>
-
-{{ $user->email }}
-
-</div>
-
-
-
-<div class="info-box">
-
-<i class="fa fa-phone icon"></i>
-
-<strong>Phone:</strong>
-
-<br>
-
-{{ $user->phone ?? 'N/A' }}
-
-</div>
-
-
-
-
-<div class="info-box">
-
-<i class="fa fa-id-card icon"></i>
-
-<strong>NIC Number:</strong>
-
-<br>
-
-{{ $user->nic_number ?? 'N/A' }}
-
-</div>
-
-
-
-
-<div class="info-box">
-
-<i class="fa fa-calendar icon"></i>
-
-<strong>Birthday:</strong>
-
-<br>
-
-{{ $user->birthday ?? 'N/A' }}
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<div class="col-md-6">
-
-
-<div class="info-box">
-
-<i class="fa fa-location-dot icon"></i>
-
-<strong>Address:</strong>
-
-<br>
-
-{{ $user->address ?? 'N/A' }}
-
-</div>
-
-
-
-
-<div class="info-box">
-
-<i class="fa fa-calendar-check icon"></i>
-
-<strong>Join Date:</strong>
-
-<br>
-
-{{ $user->join_date ?? 'N/A' }}
-
-</div>
-
-
-
-
-
-<div class="info-box">
-
-<i class="fa fa-store icon"></i>
-
-<strong>Outlet:</strong>
-
-<br>
-
-{{ $user->outlet_id ?? 'N/A' }}
-
-</div>
-
-
-
-
-
-<div class="info-box">
-
-<i class="fa fa-desktop icon"></i>
-
-<strong>Counter:</strong>
-
-<br>
-
-{{ $user->counter_id ?? 'N/A' }}
-
-</div>
-
-
-</div>
-
-
-
-</div>
-
-
-
-<div class="text-center mt-4">
-
-
-<a href="{{ route('users.index') }}" 
-class="btn btn-back px-5">
-
-<i class="fa fa-arrow-left"></i>
-
-Back
-
-</a>
-
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
-
-</body>
-
-</html>
+@endsection

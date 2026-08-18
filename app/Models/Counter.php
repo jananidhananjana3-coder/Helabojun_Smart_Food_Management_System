@@ -7,15 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Counter extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'outlet_id',
         'counter_name',
         'counter_number',
-        'status',   
+        'status',
     ];
-
-
-    // Relationships
 
     public function outlet()
     {
@@ -24,6 +23,20 @@ class Counter extends Model
 
     public function users()
     {
-    return $this->hasMany(User::class);
+        return $this->hasMany(User::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function foods()
+    {
+        return $this->belongsToMany(
+            Food::class,
+            'food_counter'
+        )->withPivot('quantity')
+         ->withTimestamps();
     }
 }

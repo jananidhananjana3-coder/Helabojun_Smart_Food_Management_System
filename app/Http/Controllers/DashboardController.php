@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Outlet;
 use App\Models\KitchenTicket;
 use App\Models\Payment;
+use App\Models\Counter;
 
 class DashboardController extends Controller
 {
@@ -85,70 +86,152 @@ class DashboardController extends Controller
 
 
 
-    public function cashier()
+        public function cashier()
     {
+        $user = auth()->user();
 
+        // Cashier's assigned outlet
+        $outlet = Outlet::find($user->outlet_id);
+
+        // Counters belonging to cashier's outlet
+        $counters = Counter::where('outlet_id', $user->outlet_id)
+        ->where('status', 'active')
+        ->with([
+            'foods' => function ($query) {
+                $query->wherePivot('quantity', '>', 0)
+                    ->with('category');
+            }
+        ])
+        ->orderByRaw('CAST(counter_number AS UNSIGNED)')
+        ->get();
+
+        // Today's orders
         $todayOrders = Order::whereDate(
             'created_at',
             today()
         )->count();
 
-
-
+        // Today's sales
         $todaySales = Payment::whereDate(
             'created_at',
             today()
         )->sum('amount');
 
+        // Recent orders
+        $recentOrders = Order::whereDate(
+            'created_at',
+            today()
+        )
+            ->latest()
+            ->get();
 
-
-        return view('cashier.dashboard',compact(
-
+        return view('cashier.dashboard', compact(
+            'outlet',
+            'counters',
+            'recentOrders',
             'todayOrders',
             'todaySales'
-
         ));
-
-
     }
 
 
 
 
 
-    public function chef()
+            public function chef()
     {
+        $user = auth()->user();
 
-        $newOrders = KitchenTicket::where(
-            'status',
-            'waiting'
-        )->count();
+        /*
+        |--------------------------------------------------------------------------
+        | CHEF COUNTER
+        |--------------------------------------------------------------------------
+        */
 
+        $counter = null;
 
+        if ($user->counter_id) {
 
-        $preparingOrders = KitchenTicket::where(
-            'status',
-            'cooking'
-        )->count();
-
-
-
-        $completedOrders = KitchenTicket::where(
-            'status',
-            'completed'
-        )->count();
-
-
-
-        return view('chef.dashboard',compact(
-
-            'newOrders',
-            'preparingOrders',
-            'completedOrders'
-
-        ));
+            $counter = Counter::with([
+                'foods.category'
+            ])
+            ->where('id', $user->counter_id)
+            ->where('status', 'active')
+            ->first();
+        }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | FOODS ASSIGNED TO CHEF'S COUNTER
+        |--------------------------------------------------------------------------
+        */
+
+        $foods = $counter
+            ? $counter->foods
+            : collect();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ORDERS FOR THIS COUNTER
+        |--------------------------------------------------------------------------
+        */
+
+        $orders = $counter
+            ? Order::with([
+                'orderItems.food'
+            ])
+            ->where('counter_id', $counter->id)
+            ->whereIn('status', [
+                'pending',
+                'preparing',
+                'ready'
+            ])
+            ->latest()
+            ->get()
+            : collect();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | COUNTS
+        |--------------------------------------------------------------------------
+        */
+
+        $newOrders = $orders
+            ->where('status', 'pending')
+            ->count();
+
+
+        $preparingOrders = $orders
+            ->where('status', 'preparing')
+            ->count();
+
+
+        $completedOrders = $orders
+            ->where('status', 'ready')
+            ->count();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VIEW
+        |--------------------------------------------------------------------------
+        */
+
+        return view(
+            'chef.dashboard',
+            compact(
+                'user',
+                'counter',
+                'foods',
+                'orders',
+                'newOrders',
+                'preparingOrders',
+                'completedOrders'
+            )
+        );
     }
 
 

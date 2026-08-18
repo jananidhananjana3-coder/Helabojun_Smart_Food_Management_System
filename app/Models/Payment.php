@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'order_id',
         'amount',
@@ -16,6 +18,11 @@ class Payment extends Model
         'change_amount',
     ];
 
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'cash_received' => 'decimal:2',
+        'change_amount' => 'decimal:2',
+    ];
 
     public function order()
     {

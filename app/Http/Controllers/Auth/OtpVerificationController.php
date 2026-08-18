@@ -16,7 +16,6 @@ class OtpVerificationController extends Controller
         return view('auth.verify-otp');
     }
 
-
     /**
      * Verify OTP code
      */
@@ -34,8 +33,34 @@ class OtpVerificationController extends Controller
             $user->verification_code = null;
             $user->save();
 
-            return redirect('/dashboard')
-                ->with('success', 'Email verification successful!');
+            /*
+            |--------------------------------------------------------------------------
+            | Role Based Dashboard Redirect
+            |--------------------------------------------------------------------------
+            */
+
+            switch ($user->role) {
+
+                case 'admin':
+                    return redirect('/admin-dashboard')
+                        ->with('success', 'Email verification successful!');
+
+                case 'manager':
+                    return redirect('/manager-dashboard')
+                        ->with('success', 'Email verification successful!');
+
+                case 'cashier':
+                    return redirect('/cashier-dashboard')
+                        ->with('success', 'Email verification successful!');
+
+                case 'chef':
+                    return redirect('/chef-dashboard')
+                        ->with('success', 'Email verification successful!');
+
+                default:
+                    return redirect('/')
+                        ->with('success', 'Email verification successful!');
+            }
         }
 
         return back()->withErrors([
