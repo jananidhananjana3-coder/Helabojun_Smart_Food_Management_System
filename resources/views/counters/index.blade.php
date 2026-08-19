@@ -1,44 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
+@extends('layouts.admin')
 
-    <meta charset="utf-8">
+@section('title', 'Counters')
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
+@section('content')
 
-    <title>
-        Counters
-    </title>
+<div class="container-fluid">
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-</head>
+        <div>
+            <h2 class="title mb-1">
+                Counter Management
+            </h2>
 
-<body class="bg-light">
-
-<div class="container py-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-
-        <h2>
-            Counter Management
-        </h2>
+            <p class="text-muted mb-0">
+                Manage counters assigned to each outlet.
+            </p>
+        </div>
 
         <a
-            class="btn btn-success"
             href="{{ route('counters.create') }}"
+            class="btn btn-success"
         >
-            + Add Counter
+            <i class="fa fa-plus"></i>
+            Add Counter
         </a>
 
     </div>
-
 
     @if(session('success'))
 
@@ -48,7 +36,6 @@
 
     @endif
 
-
     @if(session('error'))
 
         <div class="alert alert-danger">
@@ -57,32 +44,23 @@
 
     @endif
 
-
-    <div class="card">
+    <div class="card-box">
 
         <div class="table-responsive">
 
-            <table class="table mb-0 align-middle">
+            <table class="table table-hover align-middle">
 
                 <thead>
 
                     <tr>
 
-                        <th>
-                            Outlet
-                        </th>
+                        <th>Outlet</th>
 
-                        <th>
-                            Counter
-                        </th>
+                        <th>Counter</th>
 
-                        <th>
-                            Name
-                        </th>
+                        <th>Name</th>
 
-                        <th>
-                            Status
-                        </th>
+                        <th>Status</th>
 
                         <th class="text-end">
                             Actions
@@ -91,7 +69,6 @@
                     </tr>
 
                 </thead>
-
 
                 <tbody>
 
@@ -130,12 +107,12 @@
                             <td class="text-end">
 
                                 <a
-                                    class="btn btn-sm btn-outline-primary"
                                     href="{{ route('counters.edit', $c) }}"
+                                    class="btn btn-sm btn-outline-primary"
                                 >
+                                    <i class="fa fa-edit"></i>
                                     Edit
                                 </a>
-
 
                                 <form
                                     class="d-inline"
@@ -145,13 +122,13 @@
                                 >
 
                                     @csrf
-
                                     @method('DELETE')
 
                                     <button
                                         type="submit"
                                         class="btn btn-sm btn-outline-danger"
                                     >
+                                        <i class="fa fa-trash"></i>
                                         Delete
                                     </button>
 
@@ -169,7 +146,7 @@
                                 colspan="5"
                                 class="text-center p-4"
                             >
-                                No counters.
+                                No counters found.
                             </td>
 
                         </tr>
@@ -186,5 +163,4 @@
 
 </div>
 
-</body>
-</html>
+@endsection

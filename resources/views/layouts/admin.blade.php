@@ -10,9 +10,11 @@
 
     <title>@yield('title', 'Hela Bojun Admin')</title>
 
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
 
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
           rel="stylesheet">
 
@@ -30,205 +32,129 @@
             font-family: Arial, sans-serif;
         }
 
-
-        /* ========================================
-           SIDEBAR
-        ======================================== */
-
+        /* Sidebar */
         .sidebar {
 
             width: 260px;
-
             height: 100vh;
-
             position: fixed;
-
             top: 0;
-
             left: 0;
 
             background: #075e3b;
-
             color: white;
 
             padding: 20px 15px;
-
             overflow-y: auto;
-
             z-index: 1000;
-
         }
 
-
-        /* ========================================
-           LOGO
-        ======================================== */
-
+        /* Logo */
         .sidebar-logo {
 
             text-align: center;
-
             margin-bottom: 15px;
-
         }
-
 
         .sidebar-logo img {
 
             width: 150px;
-
             max-height: 90px;
-
             object-fit: contain;
-
         }
-
 
         .sidebar hr {
 
             border-color: rgba(255,255,255,0.3);
-
         }
 
-
-        /* ========================================
-           SIDEBAR LINKS
-        ======================================== */
-
+        /* Menu */
         .sidebar a {
 
             display: flex;
-
             align-items: center;
-
             gap: 12px;
 
             color: white;
-
             padding: 12px 15px;
 
             text-decoration: none;
-
             border-radius: 8px;
-
             margin-bottom: 5px;
 
             transition: 0.2s;
-
         }
-
 
         .sidebar a:hover {
 
             background: #0b8050;
-
         }
-
 
         .sidebar a.active {
 
             background: #0b8050;
-
         }
-
 
         .sidebar a i {
 
             width: 22px;
-
             text-align: center;
-
         }
 
-
-        /* ========================================
-           LOGOUT
-        ======================================== */
-
+        /* Logout */
         .logout-btn {
 
             border: none;
-
             width: 100%;
-
             margin-top: 20px;
-
             padding: 11px;
-
         }
 
-
-        /* ========================================
-           CONTENT
-        ======================================== */
-
+        /* Main content */
         .content {
 
             margin-left: 260px;
-
             min-height: 100vh;
-
             padding: 30px;
-
         }
 
-
-        /* ========================================
-           TOP BAR
-        ======================================== */
-
+        /* Top bar */
         .topbar {
 
             background: white;
-
             padding: 12px 20px;
 
             border-radius: 12px;
-
             margin-bottom: 25px;
 
             box-shadow: 0 3px 12px #ddd;
 
             display: flex;
-
             justify-content: flex-end;
-
             align-items: center;
-
         }
 
-
-        /* ========================================
-           LANGUAGE
-        ======================================== */
-
+        /* Language */
         .language-box {
 
             position: relative;
-
         }
-
 
         .language-btn {
 
             background: #075e3b;
-
             color: white;
 
             border: none;
 
             width: 42px;
-
             height: 42px;
 
             border-radius: 50%;
 
             font-size: 18px;
-
             cursor: pointer;
-
         }
-
 
         .language-menu {
 
@@ -237,7 +163,6 @@
             position: absolute;
 
             right: 0;
-
             top: 50px;
 
             background: white;
@@ -251,23 +176,18 @@
             overflow: hidden;
 
             z-index: 2000;
-
         }
-
 
         .language-menu.show {
 
             display: block;
-
         }
-
 
         .language-menu button {
 
             width: 100%;
 
             border: none;
-
             background: white;
 
             text-align: left;
@@ -275,21 +195,14 @@
             padding: 12px;
 
             cursor: pointer;
-
         }
-
 
         .language-menu button:hover {
 
             background: #f1f1f1;
-
         }
 
-
-        /* ========================================
-           GENERAL CARD
-        ======================================== */
-
+        /* Cards */
         .card-box {
 
             background: white;
@@ -301,49 +214,33 @@
             box-shadow: 0 5px 15px #ddd;
 
             margin-bottom: 30px;
-
         }
-
 
         .title {
 
             color: #075e3b;
-
             font-weight: bold;
-
         }
-
 
         .section-title {
 
             color: #075e3b;
-
             font-weight: bold;
-
         }
 
-
-        /* ========================================
-           MOBILE
-        ======================================== */
-
+        /* Mobile */
         @media(max-width: 768px) {
 
             .sidebar {
 
                 width: 220px;
-
             }
-
 
             .content {
 
                 margin-left: 220px;
-
                 padding: 20px;
-
             }
-
         }
 
     </style>
@@ -354,14 +251,12 @@
 <body>
 
 
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
+<!-- Sidebar -->
 
 <div class="sidebar">
 
 
-    <!-- LOGO -->
+    <!-- Logo -->
 
     <div class="sidebar-logo">
 
@@ -374,7 +269,7 @@
     <hr>
 
 
-    <!-- DASHBOARD -->
+    <!-- Dashboard -->
 
     <a href="/admin-dashboard"
        class="{{ request()->is('admin-dashboard') ? 'active' : '' }}">
@@ -388,7 +283,7 @@
     </a>
 
 
-    <!-- STAFF -->
+    <!-- Staff -->
 
     <a href="{{ route('users.index') }}"
        class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
@@ -402,7 +297,7 @@
     </a>
 
 
-    <!-- OUTLETS -->
+    <!-- Outlets -->
 
     <a href="{{ route('outlets.index') }}"
        class="{{ request()->routeIs('outlets.*') ? 'active' : '' }}">
@@ -416,7 +311,7 @@
     </a>
 
 
-    <!-- FOODS -->
+    <!-- Foods -->
 
     <a href="{{ route('foods.index') }}"
        class="{{ request()->routeIs('foods.*') ? 'active' : '' }}">
@@ -430,22 +325,24 @@
     </a>
 
 
-    <!-- INVENTORY -->
+    <!-- Counters -->
 
-    <a href="#">
+    <a href="{{ route('counters.index') }}"
+       class="{{ request()->routeIs('counters.*') ? 'active' : '' }}">
 
-        <i class="fa fa-box"></i>
+        <i class="fa fa-cash-register"></i>
 
         <span>
-            {{ __('messages.inventory') }}
+            Counters
         </span>
 
     </a>
 
 
-    <!-- REPORTS -->
+    <!-- Reports -->
 
-    <a href="#">
+    <a href="{{ route('reports.index') }}"
+       class="{{ request()->routeIs('reports.*') ? 'active' : '' }}">
 
         <i class="fa fa-chart-line"></i>
 
@@ -456,7 +353,7 @@
     </a>
 
 
-    <!-- LOGOUT -->
+    <!-- Logout -->
 
     <form method="POST"
           action="{{ route('logout') }}">
@@ -478,19 +375,17 @@
 </div>
 
 
-<!-- =====================================================
-     MAIN CONTENT
-===================================================== -->
+<!-- Main content -->
 
 <div class="content">
 
 
-    <!-- TOP BAR -->
+    <!-- Top bar -->
 
     <div class="topbar">
 
 
-        <!-- LANGUAGE -->
+        <!-- Language -->
 
         <div class="language-box">
 
@@ -534,14 +429,12 @@
 
             </div>
 
-
         </div>
-
 
     </div>
 
 
-    <!-- PAGE CONTENT -->
+    <!-- Page content -->
 
     @yield('content')
 
@@ -549,16 +442,12 @@
 </div>
 
 
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
+<!-- JavaScript -->
 
 <script>
 
 
-/* ========================================
-   LANGUAGE BUTTON
-======================================== */
+// Language button
 
 document
     .getElementById('languageButton')
@@ -566,14 +455,13 @@ document
 
         document
             .getElementById('languageMenu')
-            .classList.toggle('show');
+            .classList
+            .toggle('show');
 
     });
 
 
-/* ========================================
-   CLOSE LANGUAGE MENU
-======================================== */
+// Close language menu
 
 document.addEventListener('click', function(event) {
 
@@ -584,16 +472,15 @@ document.addEventListener('click', function(event) {
 
         document
             .getElementById('languageMenu')
-            .classList.remove('show');
+            .classList
+            .remove('show');
 
     }
 
 });
 
 
-/* ========================================
-   CHANGE LANGUAGE
-======================================== */
+// Change language
 
 function changeLanguage(language) {
 

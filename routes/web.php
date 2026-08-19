@@ -192,7 +192,7 @@ Route::middleware('auth')->group(function () {
         // Update Food Quantity
         Route::patch(
             '/chef/foods/{food}/quantity',
-            [ChefController::class, 'updateQuantity']
+            [ChefController::class, 'updateFoodQuantity']
         )->name('chef.foods.quantity');
 
 

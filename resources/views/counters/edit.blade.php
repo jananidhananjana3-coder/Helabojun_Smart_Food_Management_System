@@ -1,72 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
+@extends('layouts.admin')
 
-    <meta charset="utf-8">
+@section('title', 'Edit Counter')
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@section('content')
 
-    <title>
-        {{ $editing ? 'Edit' : 'Add' }} Counter
-    </title>
+<div class="container-fluid">
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
-</head>
-
-<body class="bg-light">
-
-<div class="container py-5">
-
-    <div
-        class="card shadow-sm mx-auto"
-        style="max-width: 650px"
-    >
+    <div class="card shadow-sm mx-auto" style="max-width: 650px;">
 
         <div class="card-body p-4">
 
             <h3 class="mb-4">
-                {{ $editing ? 'Edit' : 'Add' }} Counter
+                Edit Counter
             </h3>
-
 
             @if($errors->any())
 
                 <div class="alert alert-danger">
 
                     @foreach($errors->all() as $e)
-
-                        <div>
-                            {{ $e }}
-                        </div>
-
+                        <div>{{ $e }}</div>
                     @endforeach
 
                 </div>
 
             @endif
 
-
             <form
                 method="POST"
-                action="{{ $editing
-                    ? route('counters.update', $counter)
-                    : route('counters.store')
-                }}"
+                action="{{ route('counters.update', $counter) }}"
             >
 
                 @csrf
+                @method('PUT')
 
-                @if($editing)
-
-                    @method('PUT')
-
-                @endif
-
-
+                {{-- Outlet --}}
                 <div class="mb-3">
 
                     <label class="form-label">
@@ -86,15 +54,11 @@
                                 @selected(
                                     old(
                                         'outlet_id',
-                                        $editing
-                                            ? $counter->outlet_id
-                                            : ''
+                                        $counter->outlet_id
                                     ) == $o->id
                                 )
                             >
-
                                 {{ $o->outlet_name }}
-
                             </option>
 
                         @endforeach
@@ -103,7 +67,7 @@
 
                 </div>
 
-
+                {{-- Counter Number --}}
                 <div class="mb-3">
 
                     <label class="form-label">
@@ -117,15 +81,13 @@
                         required
                         value="{{ old(
                             'counter_number',
-                            $editing
-                                ? $counter->counter_number
-                                : ''
+                            $counter->counter_number
                         ) }}"
                     >
 
                 </div>
 
-
+                {{-- Counter Name --}}
                 <div class="mb-3">
 
                     <label class="form-label">
@@ -139,16 +101,14 @@
                         required
                         value="{{ old(
                             'counter_name',
-                            $editing
-                                ? $counter->counter_name
-                                : ''
+                            $counter->counter_name
                         ) }}"
                     >
 
                 </div>
 
-
-                <div class="mb-3">
+                {{-- Status --}}
+                <div class="mb-4">
 
                     <label class="form-label">
                         Status
@@ -164,9 +124,7 @@
                             @selected(
                                 old(
                                     'status',
-                                    $editing
-                                        ? $counter->status
-                                        : 'active'
+                                    $counter->status
                                 ) === 'active'
                             )
                         >
@@ -178,9 +136,7 @@
                             @selected(
                                 old(
                                     'status',
-                                    $editing
-                                        ? $counter->status
-                                        : 'active'
+                                    $counter->status
                                 ) === 'inactive'
                             )
                         >
@@ -191,14 +147,13 @@
 
                 </div>
 
-
                 <div class="d-flex gap-2">
 
                     <button
                         type="submit"
                         class="btn btn-success"
                     >
-                        Save
+                        Update Counter
                     </button>
 
                     <a
@@ -218,5 +173,4 @@
 
 </div>
 
-</body>
-</html>
+@endsection

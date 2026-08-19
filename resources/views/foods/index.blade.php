@@ -1,297 +1,164 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.admin')
 
-<head>
+@section('title', 'Food Management')
 
-    <meta charset="UTF-8">
+@section('page-title', 'Food Management')
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('content')
 
+<div class="page-header p-4 mb-4 shadow">
 
-    <title>Food Management | Hela Bojun</title>
+    <div class="d-flex justify-content-between align-items-center">
 
+        <div>
 
-    <!-- Bootstrap CSS -->
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-
-
-    <style>
-
-
-        body{
-
-            background:#f5f7f6;
-
-        }
-
-
-        .page-header{
-
-            background:#075e3b;
-
-            color:white;
-
-            border-radius:12px;
-
-        }
-
-
-        .food-image{
-
-            width:70px;
-
-            height:70px;
-
-            object-fit:cover;
-
-            border-radius:10px;
-
-        }
-
-
-        .table-card{
-
-            border-radius:15px;
-
-            overflow:hidden;
-
-        }
-
-
-    </style>
-
-</head>
-
-<body>
-
-<div class="container py-5">
-
-
-
-    <div class="page-header p-4 mb-4 shadow">
-
-
-        <div class="d-flex justify-content-between align-items-center">
-
-
-            <h2 class="mb-0">
-
+            <h2 class="mb-1">
                 Food Management
-
             </h2>
 
-
-
-            <a href="{{ route('foods.create') }}"
-               class="btn btn-light">
-
-
-                + Add Food
-
-
-            </a>
-
-
+            <div class="small opacity-75">
+                Manage food details, categories and outlet assignments.
+            </div>
 
         </div>
 
+
+        <a
+            href="{{ route('foods.create') }}"
+            class="btn btn-light"
+        >
+            <i class="fa fa-plus me-1"></i>
+            Add Food
+        </a>
 
     </div>
 
-    @if(session('success'))
+</div>
 
 
-        <div class="alert alert-success">
+@if(session('success'))
+
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+
+@endif
 
 
-            {{ session('success') }}
+@if(session('error'))
+
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+
+@endif
 
 
-        </div>
+<div class="card shadow table-card">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-success">
+
+                    <tr>
+
+                        <th>Image</th>
+
+                        <th>Food Name</th>
+
+                        <th>Category</th>
+
+                        <th>Outlet</th>
+
+                        <th>Price</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
 
 
-    @endif
+                <tbody>
 
-    <div class="card shadow table-card">
-
-
-        <div class="card-body">
-
-
-
-            <div class="table-responsive">
-
-
-
-                <table class="table table-bordered table-hover align-middle">
-
-
-
-                    <thead class="table-success">
-
-
-                        <tr>
-
-
-                            <th>
-
-                                Image
-
-                            </th>
-
-
-                            <th>
-
-                                Food Name
-
-                            </th>
-
-
-                            <th>
-
-                                Category
-
-                            </th>
-
-
-                            <th>
-
-                                Outlet
-
-                            </th>
-
-
-                            <th>
-
-                                Price
-
-                            </th>
-
-
-                            <th>
-
-                                Quantity
-
-                            </th>
-
-
-                            <th>
-
-                                Action
-
-                            </th>
-
-
-                        </tr>
-
-
-                    </thead>
-
-                    <tbody>
-
-                    @foreach($foods as $food)
+                    @forelse($foods as $food)
 
                         <tr>
-
-
 
                             <td>
-
-
 
                                 @if($food->image)
 
-
-
-                                    <img src="{{ asset('storage/'.$food->image) }}"
-                                         class="food-image">
-
-
+                                    <img
+                                        src="{{ asset('storage/' . $food->image) }}"
+                                        class="food-image"
+                                    >
 
                                 @else
 
-
-
                                     <span class="text-muted">
-
                                         No Image
-
                                     </span>
-
-
 
                                 @endif
 
-
-
                             </td>
+
 
                             <td>
 
-
-                                {{ $food->food_name }}
-
+                                <strong>
+                                    {{ $food->food_name }}
+                                </strong>
 
                             </td>
 
+
                             <td>
-
-
                                 {{ $food->category->category_name ?? 'N/A' }}
-
-
                             </td>
 
+
                             <td>
-
-
                                 {{ $food->outlet->outlet_name ?? 'N/A' }}
-
-
                             </td>
+
+
+                            <td>
+                                Rs. {{ number_format($food->price, 2) }}
+                            </td>
+
+
                             <td>
 
-
-                                Rs. {{ number_format($food->price,2) }}
-
-
-                            </td>
-                            <td>
-
-
-                                {{ $food->available_quantity }}
-
-
-                            </td>
-                            <td>
-
-
-
-                                <a href="{{ route('foods.edit',$food->id) }}"
-                                   class="btn btn-warning btn-sm">
-
-
+                                <a
+                                    href="{{ route('foods.edit', $food->id) }}"
+                                    class="btn btn-warning btn-sm"
+                                >
+                                    <i class="fa fa-pen"></i>
                                     Edit
-
-
                                 </a>
 
-                                <form action="{{ route('foods.destroy',$food->id) }}"
-                                      method="POST"
-                                      class="d-inline">
 
+                                <form
+                                    action="{{ route('foods.destroy', $food->id) }}"
+                                    method="POST"
+                                    class="d-inline"
+                                    onsubmit="return confirm('Delete this food?')"
+                                >
 
                                     @csrf
-
                                     @method('DELETE')
 
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Delete this food?')">
-
-
+                                    <button
+                                        type="submit"
+                                        class="btn btn-danger btn-sm"
+                                    >
+                                        <i class="fa fa-trash"></i>
                                         Delete
                                     </button>
 
@@ -299,21 +166,58 @@
 
                             </td>
 
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="text-center text-muted py-4"
+                            >
+                                No foods found.
+                            </td>
 
                         </tr>
 
-                    @endforeach
+                    @endforelse
 
-                    </tbody>
+                </tbody>
 
-                </table>
-
-            </div>
+            </table>
 
         </div>
+
     </div>
+
 </div>
 
-</body>
+@endsection
 
-</html>
+
+@push('styles')
+
+<style>
+
+    .page-header {
+        background: #075e3b;
+        color: white;
+        border-radius: 12px;
+    }
+
+    .food-image {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .table-card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+</style>
+
+@endpush

@@ -8,14 +8,11 @@ use Illuminate\Http\Request;
 
 class CounterController extends Controller
 {
-    /**
-     * Display all counters.
-     */
     public function index()
     {
         $counters = Counter::with('outlet')
             ->orderBy('outlet_id')
-            ->orderBy('counter_number')
+            ->orderByRaw('CAST(counter_number AS UNSIGNED)')
             ->get();
 
         return view(
@@ -24,9 +21,6 @@ class CounterController extends Controller
         );
     }
 
-    /**
-     * Show create counter form.
-     */
     public function create()
     {
         $outlets = Outlet::where('status', 'active')
@@ -39,14 +33,11 @@ class CounterController extends Controller
         )->with('editing', false);
     }
 
-    /**
-     * Store a new counter.
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
             'outlet_id' => 'required|exists:outlets,id',
-            'counter_number' => 'required|string|max:50',
+            'counter_number' => 'required|integer|min:1',
             'counter_name' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
         ]);
@@ -80,9 +71,6 @@ class CounterController extends Controller
             );
     }
 
-    /**
-     * Show edit counter form.
-     */
     public function edit(Counter $counter)
     {
         $outlets = Outlet::where('status', 'active')
@@ -95,19 +83,16 @@ class CounterController extends Controller
                 'counter',
                 'outlets'
             )
-        );
+        )->with('editing', true);
     }
 
-    /**
-     * Update an existing counter.
-     */
     public function update(
         Request $request,
         Counter $counter
     ) {
         $data = $request->validate([
             'outlet_id' => 'required|exists:outlets,id',
-            'counter_number' => 'required|string|max:50',
+            'counter_number' => 'required|integer|min:1',
             'counter_name' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
         ]);
@@ -146,9 +131,6 @@ class CounterController extends Controller
             );
     }
 
-    /**
-     * Delete a counter.
-     */
     public function destroy(Counter $counter)
     {
         if (

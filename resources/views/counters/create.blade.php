@@ -1,231 +1,150 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.admin')
 
-<head>
+@section('title', 'Add Counter')
 
-    <meta charset="utf-8">
+@section('content')
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
+<div class="container-fluid">
 
-    <title>Add Counter</title>
+    <div class="card shadow-sm mx-auto" style="max-width: 650px;">
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+        <div class="card-body p-4">
 
-</head>
+            <h3 class="mb-4">
+                Add Counter
+            </h3>
 
-<body class="bg-light">
+            @if($errors->any())
 
-    <div class="container py-5">
+                <div class="alert alert-danger">
 
-        <div
-            class="card shadow-sm mx-auto"
-            style="max-width: 650px;"
-        >
+                    @foreach($errors->all() as $e)
+                        <div>{{ $e }}</div>
+                    @endforeach
 
-            <div class="card-body p-4">
+                </div>
 
-                <h3 class="mb-4">
-                    {{ $editing ? 'Edit Counter' : 'Add Counter' }}
-                </h3>
+            @endif
 
+            <form
+                method="POST"
+                action="{{ route('counters.store') }}"
+            >
 
-                {{-- Validation Errors --}}
+                @csrf
 
-                @if($errors->any())
+                {{-- Outlet --}}
+                <div class="mb-3">
 
-                    <div class="alert alert-danger">
+                    <label class="form-label">
+                        Outlet
+                    </label>
 
-                        @foreach($errors->all() as $e)
+                    <select
+                        name="outlet_id"
+                        class="form-select"
+                        required
+                    >
 
-                            <div>
-                                {{ $e }}
-                            </div>
+                        <option value="">
+                            Select Outlet
+                        </option>
+
+                        @foreach($outlets as $o)
+
+                            <option
+                                value="{{ $o->id }}"
+                                @selected(
+                                    old('outlet_id') == $o->id
+                                )
+                            >
+                                {{ $o->outlet_name }}
+                            </option>
 
                         @endforeach
 
-                    </div>
+                    </select>
 
-                @endif
+                </div>
 
+                {{-- Counter Number --}}
+                <div class="mb-3">
 
-                {{-- Counter Form --}}
+                    <label class="form-label">
+                        Counter Number
+                    </label>
 
-                <form
-                    method="POST"
-                    action="{{ $editing
-                        ? route('counters.update', $counter)
-                        : route('counters.store') }}"
-                >
+                    <input
+                        type="text"
+                        name="counter_number"
+                        class="form-control"
+                        required
+                        value="{{ old('counter_number') }}"
+                    >
 
-                    @csrf
+                </div>
 
-                    @if($editing)
+                {{-- Counter Name --}}
+                <div class="mb-3">
 
-                        @method('PUT')
+                    <label class="form-label">
+                        Counter Name
+                    </label>
 
-                    @endif
+                    <input
+                        type="text"
+                        name="counter_name"
+                        class="form-control"
+                        required
+                        value="{{ old('counter_name') }}"
+                    >
 
+                </div>
 
-                    {{-- Outlet --}}
+                {{-- Status --}}
+                <div class="mb-4">
 
-                    <div class="mb-3">
+                    <label class="form-label">
+                        Status
+                    </label>
 
-                        <label
-                            for="outlet_id"
-                            class="form-label"
+                    <select
+                        name="status"
+                        class="form-select"
+                    >
+
+                        <option
+                            value="active"
+                            @selected(
+                                old(
+                                    'status',
+                                    'active'
+                                ) === 'active'
+                            )
                         >
-                            Outlet
-                        </label>
+                            Active
+                        </option>
 
-                        <select
-                            id="outlet_id"
-                            name="outlet_id"
-                            class="form-select"
-                            required
+                        <option
+                            value="inactive"
+                            @selected(
+                                old('status') === 'inactive'
+                            )
                         >
+                            Inactive
+                        </option>
 
-                            @foreach($outlets as $o)
+                    </select>
 
-                                <option
-                                    value="{{ $o->id }}"
-                                    @selected(
-                                        old(
-                                            'outlet_id',
-                                            $editing
-                                                ? $counter->outlet_id
-                                                : ''
-                                        ) == $o->id
-                                    )
-                                >
-                                    {{ $o->outlet_name }}
-                                </option>
+                </div>
 
-                            @endforeach
-
-                        </select>
-
-                    </div>
-
-
-                    {{-- Counter Number --}}
-
-                    <div class="mb-3">
-
-                        <label
-                            for="counter_number"
-                            class="form-label"
-                        >
-                            Counter Number
-                        </label>
-
-                        <input
-                            type="number"
-                            id="counter_number"
-                            name="counter_number"
-                            class="form-control"
-                            required
-                            value="{{ old(
-                                'counter_number',
-                                $editing
-                                    ? $counter->counter_number
-                                    : ''
-                            ) }}"
-                        >
-
-                    </div>
-
-
-                    {{-- Counter Name --}}
-
-                    <div class="mb-3">
-
-                        <label
-                            for="counter_name"
-                            class="form-label"
-                        >
-                            Counter Name
-                        </label>
-
-                        <input
-                            type="text"
-                            id="counter_name"
-                            name="counter_name"
-                            class="form-control"
-                            required
-                            value="{{ old(
-                                'counter_name',
-                                $editing
-                                    ? $counter->counter_name
-                                    : ''
-                            ) }}"
-                        >
-
-                    </div>
-
-
-                    {{-- Status --}}
-
-                    <div class="mb-4">
-
-                        <label
-                            for="status"
-                            class="form-label"
-                        >
-                            Status
-                        </label>
-
-                        <select
-                            id="status"
-                            name="status"
-                            class="form-select"
-                        >
-
-                            <option
-                                value="active"
-                                @selected(
-                                    old(
-                                        'status',
-                                        $editing
-                                            ? $counter->status
-                                            : 'active'
-                                    ) === 'active'
-                                )
-                            >
-                                Active
-                            </option>
-
-                            <option
-                                value="inactive"
-                                @selected(
-                                    old(
-                                        'status',
-                                        $editing
-                                            ? $counter->status
-                                            : 'active'
-                                    ) === 'inactive'
-                                )
-                            >
-                                Inactive
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    {{-- Buttons --}}
+                <div class="d-flex gap-2">
 
                     <button
                         type="submit"
                         class="btn btn-success"
                     >
-                        {{ $editing ? 'Update' : 'Save' }}
+                        Save Counter
                     </button>
 
                     <a
@@ -235,14 +154,14 @@
                         Cancel
                     </a>
 
-                </form>
+                </div>
 
-            </div>
+            </form>
 
         </div>
 
     </div>
 
-</body>
+</div>
 
-</html>
+@endsection

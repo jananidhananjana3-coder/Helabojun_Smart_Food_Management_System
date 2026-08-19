@@ -7,30 +7,14 @@ use Illuminate\Http\Request;
 
 class QueueDisplayController extends Controller
 {
-    /**
-     * Display current queue orders.
-     *
-     * Orders shown:
-     * preparing
-     * ready
-     */
     public function index(Request $request)
     {
-        $query = Order::with([
-            'counter',
-            'outlet'
-        ])
-        ->whereIn('status', [
-            'preparing',
-            'ready'
-        ])
-        ->latest();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Optional outlet filter
-        |--------------------------------------------------------------------------
-        */
+        $query = Order::with('counter')
+            ->whereIn('status', [
+                'preparing',
+                'ready',
+            ])
+            ->latest();
 
         if ($request->filled('outlet_id')) {
             $query->where(
@@ -47,29 +31,14 @@ class QueueDisplayController extends Controller
         );
     }
 
-
-    /**
-     * Return current queue data as JSON.
-     *
-     * Used by AJAX / WebSocket refresh.
-     */
     public function data(Request $request)
     {
-        $query = Order::with([
-            'counter',
-            'outlet'
-        ])
-        ->whereIn('status', [
-            'preparing',
-            'ready'
-        ])
-        ->latest();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Optional outlet filter
-        |--------------------------------------------------------------------------
-        */
+        $query = Order::with('counter')
+            ->whereIn('status', [
+                'preparing',
+                'ready',
+            ])
+            ->latest();
 
         if ($request->filled('outlet_id')) {
             $query->where(
@@ -84,7 +53,8 @@ class QueueDisplayController extends Controller
             'orders' => $orders
                 ->map(function ($order) {
                     return [
-                        'id' => $order->id,
+                        'id' =>
+                            $order->id,
 
                         'token' =>
                             $order->token_number,
@@ -94,9 +64,6 @@ class QueueDisplayController extends Controller
 
                         'counter' =>
                             $order->counter?->counter_number,
-
-                        'outlet' =>
-                            $order->outlet?->outlet_name,
                     ];
                 })
                 ->values(),

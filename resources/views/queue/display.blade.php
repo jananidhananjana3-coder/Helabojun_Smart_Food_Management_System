@@ -4,31 +4,35 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Hela Bojun Queue Display</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Queue | Hela Bojun</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
-    <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        rel="stylesheet"
-    >
-
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
             background: #063c27;
             color: #fff;
-            font-family: "Segoe UI", Arial, sans-serif;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
         }
 
         .head {
-            padding: 20px 30px;
+            padding: 22px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -36,8 +40,8 @@
 
         .brand {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 12px;
         }
 
         .brand img {
@@ -50,8 +54,8 @@
         }
 
         .brand h1 {
-            font-size: 30px;
             margin: 0;
+            font-size: 30px;
             font-weight: 800;
         }
 
@@ -71,50 +75,141 @@
 
         .token-card {
             background: #fff;
-            color: #064d31;
-            border-radius: 22px;
-            padding: 25px;
+            color: #075e3b;
+            border-radius: 20px;
+            padding: 20px 15px;
             text-align: center;
             box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
             min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .counter-label {
+            font-size: 13px;
+            font-weight: 800;
+            color: #777;
+            letter-spacing: 1.5px;
+        }
+
+        .counter-number {
+            font-size: 30px;
+            font-weight: 900;
+            line-height: 1;
+            margin-top: 4px;
+        }
+
+        .token-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #777;
+            letter-spacing: 1.5px;
+            margin-top: 18px;
         }
 
         .token {
-            font-size: 68px;
+            font-size: 52px;
             font-weight: 900;
             line-height: 1;
-            margin: 10px 0 15px;
+            margin: 7px 0 15px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 13px;
         }
 
         .ready {
-            display: inline-block;
             background: #e7f7ed;
             color: #075e3b;
-            border-radius: 999px;
-            padding: 6px 14px;
-            font-weight: 800;
-        }
-
-        .counter-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 15px;
-        }
-
-        .counter {
-            background: #075e3b;
-            color: #fff;
-            padding: 6px 11px;
-            border-radius: 8px;
-            font-weight: 700;
         }
 
         .empty {
-            opacity: .6;
+            opacity: .7;
             text-align: center;
-            padding: 80px;
+            padding: 80px 20px;
+        }
+
+        @media (min-width: 1400px) {
+
+            .token-card {
+                min-height: 240px;
+            }
+
+            .token {
+                font-size: 60px;
+            }
+
+            .counter-number {
+                font-size: 34px;
+            }
+
+        }
+
+        @media (max-width: 992px) {
+
+            .head {
+                padding: 18px 20px;
+            }
+
+            .brand h1 {
+                font-size: 25px;
+            }
+
+            .clock {
+                font-size: 23px;
+            }
+
+            .grid {
+                padding: 10px 20px 25px;
+            }
+
+        }
+
+        @media (max-width: 576px) {
+
+            .head {
+                padding: 15px;
+            }
+
+            .brand img {
+                width: 48px;
+                height: 48px;
+            }
+
+            .brand h1 {
+                font-size: 21px;
+            }
+
+            .subtitle {
+                font-size: 11px;
+            }
+
+            .clock {
+                font-size: 17px;
+            }
+
+            .grid {
+                padding: 10px 12px 20px;
+            }
+
+            .token-card {
+                min-height: 190px;
+            }
+
+            .token {
+                font-size: 42px;
+            }
+
+            .counter-number {
+                font-size: 25px;
+            }
+
         }
 
     </style>
@@ -127,11 +222,16 @@
 
     <div class="brand">
 
-        <img src="{{ asset('images/hela-bojun-logo.png') }}">
+        <img
+            src="{{ asset('images/hela-bojun-logo.png') }}"
+            alt="Hela Bojun"
+        >
 
         <div>
 
-            <h1>Hela Bojun</h1>
+            <h1>
+                Hela Bojun
+            </h1>
 
             <div class="subtitle">
                 Order Ready /
@@ -143,111 +243,138 @@
 
     </div>
 
-    <div class="clock" id="clock"></div>
+    <div
+        id="clock"
+        class="clock"
+    ></div>
 
 </header>
 
+<main class="grid">
 
-<div class="grid">
+    <div
+        id="queueGrid"
+        class="row g-4"
+    >
 
-    <div id="queueGrid" class="row g-4">
-
-        @forelse($readyOrders as $order)
-
-            <div class="col-md-4 col-xl-3">
-
-                <div class="token-card">
-
-                    <div class="small fw-bold">
-                        TOKEN
-                    </div>
-
-                    <div class="token">
-                        {{ $order->token_number }}
-                    </div>
-
-                    <span class="ready">
-                        READY
-                    </span>
-
-
-                    {{-- Counter --}}
-
-                    <div class="counter-list">
-
-                        @if($order->counter)
-
-                            <span class="counter">
-
-                                Counter
-                                {{ $order->counter->counter_number }}
-
-                            </span>
-
-                        @else
-
-                            <span class="text-muted">
-                                Counter —
-                            </span>
-
-                        @endif
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        @empty
-
-            <div class="col-12 empty">
-
-                <i class="fa fa-mug-hot fa-3x mb-3"></i>
-
-                <h2>No orders ready</h2>
-
-            </div>
-
-        @endforelse
+        @include(
+            'queue.partials.cards',
+            ['orders' => $orders]
+        )
 
     </div>
 
-</div>
-
-
-{{-- Laravel Echo / Reverb --}}
+</main>
 
 @vite(['resources/js/app.js'])
 
-
 <script>
 
-    // Clock
-
-    function updateClock() {
-
+    function updateClock()
+    {
         document.getElementById('clock').textContent =
             new Date().toLocaleTimeString();
-
     }
 
     updateClock();
 
     setInterval(updateClock, 1000);
 
-
-    // Laravel Echo
-
-    if (window.Echo) {
-
+    if (window.Echo)
+    {
         window.Echo
             .channel('helabojun.queue')
-            .listen('.kitchen.ticket.updated', function (event) {
+            .listen(
+                '.kitchen.ticket.updated',
+                function ()
+                {
+                    refreshQueue();
+                }
+            );
+    }
 
-                location.reload();
+    async function refreshQueue()
+    {
+        try
+        {
+            const response =
+                await fetch(
+                    '{{ route('queue.display.data') }}',
+                    {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }
+                );
 
-            });
+            if (!response.ok)
+            {
+                return;
+            }
 
+            const data =
+                await response.json();
+
+            const queueGrid =
+                document.getElementById('queueGrid');
+
+            if (
+                !data.orders ||
+                data.orders.length === 0
+            )
+            {
+                queueGrid.innerHTML = `
+                    <div class="col-12 empty">
+                        <h2>No orders ready</h2>
+                    </div>
+                `;
+
+                return;
+            }
+
+            queueGrid.innerHTML =
+                data.orders.map(
+                    function(order)
+                    {
+                        return `
+                            <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+
+                                <div class="token-card">
+
+                                    <div class="counter-label">
+                                        COUNTER
+                                    </div>
+
+                                    <div class="counter-number">
+                                        ${order.counter ?? '—'}
+                                    </div>
+
+                                    <div class="token-label">
+                                        TOKEN
+                                    </div>
+
+                                    <div class="token">
+                                        ${order.token ?? '—'}
+                                    </div>
+
+                                    <span class="status ready">
+                                        READY
+                                    </span>
+
+                                </div>
+
+                            </div>
+                        `;
+                    }
+                ).join('');
+        }
+        catch (error)
+        {
+            console.error(
+                'Queue refresh error:',
+                error
+            );
+        }
     }
 
 </script>
