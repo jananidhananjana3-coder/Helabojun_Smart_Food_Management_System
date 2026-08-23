@@ -8,18 +8,18 @@ use Illuminate\Http\Request;
 class CustomerDisplayController extends Controller
 {
     /**
-     * Display available foods for customers.
+     * Display foods that are available at least
+     * from one assigned counter.
      */
     public function index(Request $request)
     {
         $query = Food::with([
-                'category',
-                'counters'
-            ])
-            ->whereHas(
-                'counters',
-                fn ($q) => $q->where('quantity', '>', 0)
-            );
+            'category',
+            'counters',
+        ])
+            ->whereHas('counters', function ($query) {
+                $query->where('food_counter.quantity', '>', 0);
+            });
 
         if ($request->filled('outlet_id')) {
             $query->where(
@@ -33,8 +33,9 @@ class CustomerDisplayController extends Controller
             ->get();
 
         $categories = $foods->groupBy(
-            fn ($food) =>
-                $food->category->category_name ?? 'Other'
+            function ($food) {
+                return $food->category->category_name ?? 'Other';
+            }
         );
 
         return view(
@@ -49,13 +50,12 @@ class CustomerDisplayController extends Controller
     public function data(Request $request)
     {
         $query = Food::with([
-                'category',
-                'counters'
-            ])
-            ->whereHas(
-                'counters',
-                fn ($q) => $q->where('quantity', '>', 0)
-            );
+            'category',
+            'counters',
+        ])
+            ->whereHas('counters', function ($query) {
+                $query->where('food_counter.quantity', '>', 0);
+            });
 
         if ($request->filled('outlet_id')) {
             $query->where(
@@ -64,28 +64,26 @@ class CustomerDisplayController extends Controller
             );
         }
 
-        $foods = $query->get();
+        $foods = $query
+            ->orderBy('food_name')
+            ->get();
 
         return response()->json([
             'foods' => $foods
-                ->map(
-                    fn ($f) => [
-                        'id' => $f->id,
-
-                        'name' => $f->food_name,
-
-                        'price' => (float) $f->price,
-
-                        'image' => $f->image
-                            ? asset('storage/' . $f->image)
+                ->map(function ($food) {
+                    return [
+                        'id' => $food->id,
+                        'name' => $food->food_name,
+                        'price' => (float) $food->price,
+                        'image' => $food->image
+                            ? asset('storage/' . $food->image)
                             : null,
-
                         'category' =>
-                            $f->category->category_name
+                            $food->category->category_name
                             ?? 'Other',
-                    ]
-                )
-                ->values()
+                    ];
+                })
+                ->values(),
         ]);
     }
 }

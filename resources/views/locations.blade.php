@@ -4,21 +4,118 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Department of Agriculture - Hela Bojun</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Hela Bojun - Locations</title>
+
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
+
     <link
         rel="stylesheet"
         href="{{ asset('css/styles.css') }}">
 
+
+    <style>
+
+        .locations-section {
+
+            padding: 70px 0;
+
+            background: #f8faf8;
+
+            min-height: calc(100vh - 150px);
+
+        }
+
+
+        .location-card {
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.08);
+
+            height: 100%;
+
+        }
+
+
+        .location-icon {
+
+            width: 60px;
+
+            height: 60px;
+
+            border-radius: 50%;
+
+            background: #e8f5e9;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 28px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .map-container {
+
+            width: 100%;
+
+            height: 500px;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.10);
+
+        }
+
+
+        .map-container iframe {
+
+            width: 100%;
+
+            height: 100%;
+
+            border: 0;
+
+        }
+
+
+        .location-title {
+
+            color: #198754;
+
+        }
+
+    </style>
+
 </head>
 
+
 <body>
+
+
+<!-- HEADER -->
 
 <header class="top-header">
 
@@ -26,7 +123,8 @@
 
         <div class="d-flex align-items-center justify-content-between header-wrapper">
 
-            <!-- LEFT : EMBLEM + DEPARTMENT -->
+
+            <!-- LEFT -->
 
             <div class="d-flex align-items-center gap-3 notranslate">
 
@@ -34,6 +132,7 @@
                     src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Emblem_of_Sri_Lanka.svg"
                     class="emblem-img"
                     alt="Sri Lanka Emblem">
+
 
                 <div class="department-text">
 
@@ -54,7 +153,7 @@
             </div>
 
 
-            <!-- CENTER : NAVIGATION -->
+            <!-- NAVIGATION -->
 
             <div class="d-none d-lg-block">
 
@@ -62,17 +161,19 @@
 
                     <a
                         href="{{ route('home') }}"
-                        class="nav-link-custom active"
+                        class="nav-link-custom"
                         data-i18n="nav_home">
                         Home
                     </a>
 
+
                     <a
                         href="{{ route('public.locations') }}"
-                        class="nav-link-custom"
+                        class="nav-link-custom active"
                         data-i18n="nav_locations">
                         Locations
                     </a>
+
 
                     <a
                         href="{{ route('public.about') }}"
@@ -80,6 +181,7 @@
                         data-i18n="nav_about">
                         About Us
                     </a>
+
 
                     <a
                         href="{{ route('public.contact') }}"
@@ -93,9 +195,10 @@
             </div>
 
 
-            <!-- RIGHT : LANGUAGE + LOGIN -->
+            <!-- RIGHT -->
 
             <div class="header-actions">
+
 
                 <div class="dropdown">
 
@@ -103,33 +206,50 @@
                         class="language-btn dropdown-toggle"
                         data-bs-toggle="dropdown"
                         aria-expanded="false">
+
                         🌐
+
                     </button>
+
 
                     <ul class="dropdown-menu dropdown-menu-end shadow">
 
                         <li>
+
                             <button
                                 class="dropdown-item"
                                 onclick="changeLanguage('en')">
+
                                 English
+
                             </button>
+
                         </li>
 
+
                         <li>
+
                             <button
                                 class="dropdown-item"
                                 onclick="changeLanguage('si')">
+
                                 සිංහල
+
                             </button>
+
                         </li>
 
+
                         <li>
+
                             <button
                                 class="dropdown-item"
                                 onclick="changeLanguage('ta')">
+
                                 தமிழ்
+
                             </button>
+
                         </li>
 
                     </ul>
@@ -141,7 +261,9 @@
                     href="{{ route('login') }}"
                     class="login-btn"
                     data-i18n="login">
+
                     Login
+
                 </a>
 
             </div>
@@ -153,32 +275,125 @@
 </header>
 
 
-<!-- HERO SECTION -->
 
-<section class="hero-section">
+<!-- LOCATIONS -->
 
-    <div class="container text-center">
+<section class="locations-section">
 
-        <h2
-            class="welcome-text"
-            data-i18n="welcome">
-            Welcome to Hela Bojun
-        </h2>
+    <div class="container">
 
-        <p
-            class="sub-text"
-            data-i18n="sub_title">
-            Authentic Sri Lankan Traditional Food Experience
-        </p>
 
-        <img
-            src="{{ asset('images/hela-bojun-logo.png') }}"
-            class="main-logo"
-            alt="Hela Bojun Logo">
+        <!-- TITLE -->
+
+        <div class="text-center mb-5">
+
+            <h1
+                class="fw-bold"
+                data-i18n="title">
+
+                Hela Bojun Locations
+
+            </h1>
+
+
+            <p
+                class="text-muted"
+                data-i18n="subtitle">
+
+                Find Hela Bojun locations across Sri Lanka
+
+            </p>
+
+        </div>
+
+
+
+        <div class="row g-4">
+
+
+            <!-- LOCATION INFORMATION -->
+
+            <div class="col-lg-4">
+
+                <div class="location-card">
+
+
+                    <div class="location-icon">
+
+                        📍
+
+                    </div>
+
+
+                    <h3
+                        class="fw-bold location-title"
+                        data-i18n="location_title">
+
+                        Hela Bojun Locations
+
+                    </h3>
+
+
+                    <p
+                        class="text-muted"
+                        data-i18n="location_text">
+
+                        Hela Bojun food outlets are located
+                        in different areas of Sri Lanka.
+                        Use the map to find locations.
+
+                    </p>
+
+
+                    <hr>
+
+
+                    <h5 class="fw-bold">
+
+                        🇱🇰 Sri Lanka
+
+                    </h5>
+
+
+                    <p class="text-muted mb-0">
+
+                        Hela Bojun Food Service
+
+                        <br>
+
+                        Department of Agriculture
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- GOOGLE MAP -->
+
+            <div class="col-lg-8">
+
+                <div class="map-container">
+
+                    <iframe
+                        src="https://www.google.com/maps?q=Hela%20Bojun%20Sri%20Lanka&output=embed"
+                        loading="lazy"
+                        allowfullscreen>
+                    </iframe>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
 </section>
+
 
 
 <!-- FOOTER -->
@@ -192,14 +407,17 @@
 </footer>
 
 
+
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
 </script>
 
 
+
 <script>
 
 const translations = {
+
 
     en: {
 
@@ -213,9 +431,16 @@ const translations = {
 
         login: "Login",
 
-        welcome: "Welcome to Hela Bojun",
+        title: "Hela Bojun Locations",
 
-        sub_title: "Authentic Sri Lankan Traditional Food Experience",
+        subtitle:
+            "Find Hela Bojun locations across Sri Lanka",
+
+        location_title:
+            "Hela Bojun Locations",
+
+        location_text:
+            "Hela Bojun food outlets are located in different areas of Sri Lanka. Use the map to find locations.",
 
         footer:
             "© Department of Agriculture - Hela Bojun Digital Food Management System"
@@ -235,11 +460,17 @@ const translations = {
 
         login: "ඇතුළු වන්න",
 
-        welcome:
-            "හෙළ බොජුන් හල වෙත සාදරයෙන් පිළිගනිමු",
+        title:
+            "හෙළ බොජුන් ස්ථාන",
 
-        sub_title:
-            "දේශීය පාරම්පරික රසවත් ආහාර අත්දැකීම",
+        subtitle:
+            "ශ්‍රී ලංකාව පුරා ඇති හෙළ බොජුන් ස්ථාන සොයාගන්න",
+
+        location_title:
+            "හෙළ බොජුන් ස්ථාන",
+
+        location_text:
+            "ශ්‍රී ලංකාවේ විවිධ ප්‍රදේශවල පිහිටි හෙළ බොජුන් ස්ථාන සිතියම මගින් සොයාගන්න.",
 
         footer:
             "© කෘෂිකර්ම දෙපාර්තමේන්තුව - හෙළ බොජුන් ඩිජිටල් කළමනාකරණ පද්ධතිය"
@@ -259,11 +490,17 @@ const translations = {
 
         login: "உள்நுழைய",
 
-        welcome:
-            "ஹெல பொஜுன் பகுதிக்கு நல்வரவு",
+        title:
+            "ஹெல பொஜுன் இடங்கள்",
 
-        sub_title:
-            "உண்மையான இலங்கை பாரம்பரிய உணவு அனுபவம்",
+        subtitle:
+            "இலங்கை முழுவதும் உள்ள ஹெல பொஜுன் இடங்களை கண்டறியவும்",
+
+        location_title:
+            "ஹெல பொஜுன் இடங்கள்",
+
+        location_text:
+            "இலங்கையின் பல்வேறு பகுதிகளில் அமைந்துள்ள ஹெல பொஜுன் இடங்களை வரைபடத்தின் மூலம் கண்டறியவும்.",
 
         footer:
             "© விவசாயத் திணைக்களம் - ஹெல பொஜுன் டிஜிட்டல் மேலாண்மை அமைப்பு"
@@ -273,6 +510,7 @@ const translations = {
 };
 
 
+
 function changeLanguage(lang) {
 
     localStorage.setItem(
@@ -280,12 +518,14 @@ function changeLanguage(lang) {
         lang
     );
 
+
     document
         .querySelectorAll('[data-i18n]')
-        .forEach(function (element) {
+        .forEach(function(element) {
 
             const key =
                 element.getAttribute('data-i18n');
+
 
             if (
                 translations[lang] &&
@@ -302,9 +542,10 @@ function changeLanguage(lang) {
 }
 
 
+
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    function() {
 
         const savedLang =
             localStorage.getItem('selectedLang') || 'en';
@@ -315,6 +556,7 @@ document.addEventListener(
 );
 
 </script>
+
 
 </body>
 

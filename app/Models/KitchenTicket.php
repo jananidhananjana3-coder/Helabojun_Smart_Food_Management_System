@@ -13,6 +13,8 @@ class KitchenTicket extends Model
 
         'order_id',
 
+        'counter_id',
+
         'chef_id',
 
         'status',
@@ -27,6 +29,11 @@ class KitchenTicket extends Model
         );
     }
 
+    public function counter()
+    {
+        return $this->belongsTo
+        (Counter::class);
+    }
 
     public function chef()
     {
@@ -35,4 +42,5 @@ class KitchenTicket extends Model
             'chef_id'
         );
     }
+    
 }

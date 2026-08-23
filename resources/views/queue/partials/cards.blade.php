@@ -1,4 +1,4 @@
-@forelse($orders as $order)
+@forelse($orders as $queue)
 
     <div class="col-6 col-md-4 col-lg-3 col-xl-2">
 
@@ -9,7 +9,7 @@
             </div>
 
             <div class="counter-number">
-                {{ $order->counter?->counter_number ?? '—' }}
+                {{ $queue->counter?->counter_number ?? '—' }}
             </div>
 
             <div class="token-label">
@@ -17,7 +17,7 @@
             </div>
 
             <div class="token">
-                {{ $order->token_number }}
+                {{ $queue->order?->token_number ?? '—' }}
             </div>
 
             <span class="status ready">
@@ -31,11 +31,7 @@
 @empty
 
     <div class="col-12 empty">
-
-        <h2>
-            No orders ready
-        </h2>
-
+        <h2>No orders ready</h2>
     </div>
 
 @endforelse

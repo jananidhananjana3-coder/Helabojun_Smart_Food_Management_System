@@ -77,7 +77,7 @@
             background: #fff;
             color: #075e3b;
             border-radius: 20px;
-            padding: 20px 15px;
+            padding: 25px 15px;
             text-align: center;
             box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
             min-height: 220px;
@@ -87,38 +87,23 @@
             align-items: center;
         }
 
-        .counter-label {
+        .token-label {
             font-size: 13px;
             font-weight: 800;
             color: #777;
             letter-spacing: 1.5px;
         }
 
-        .counter-number {
-            font-size: 30px;
-            font-weight: 900;
-            line-height: 1;
-            margin-top: 4px;
-        }
-
-        .token-label {
-            font-size: 12px;
-            font-weight: 800;
-            color: #777;
-            letter-spacing: 1.5px;
-            margin-top: 18px;
-        }
-
         .token {
-            font-size: 52px;
+            font-size: 58px;
             font-weight: 900;
             line-height: 1;
-            margin: 7px 0 15px;
+            margin: 12px 0 18px;
         }
 
         .status {
             display: inline-block;
-            padding: 6px 16px;
+            padding: 7px 18px;
             border-radius: 999px;
             font-weight: 800;
             font-size: 13px;
@@ -142,11 +127,7 @@
             }
 
             .token {
-                font-size: 60px;
-            }
-
-            .counter-number {
-                font-size: 34px;
+                font-size: 68px;
             }
 
         }
@@ -203,11 +184,7 @@
             }
 
             .token {
-                font-size: 42px;
-            }
-
-            .counter-number {
-                font-size: 25px;
+                font-size: 45px;
             }
 
         }
@@ -257,10 +234,42 @@
         class="row g-4"
     >
 
-        @include(
-            'queue.partials.cards',
-            ['orders' => $orders]
-        )
+        @forelse($orders as $queue)
+
+            <div
+                class="col-6 col-md-4 col-lg-3 col-xl-2"
+                data-queue-id="{{ $queue->id }}"
+            >
+
+                <div class="token-card">
+
+                    <div class="token-label">
+                        TOKEN
+                    </div>
+
+                    <div class="token">
+                        {{ $queue->order?->token_number ?? '—' }}
+                    </div>
+
+                    <span class="status ready">
+                        READY
+                    </span>
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <div class="col-12 empty">
+
+                <h2>
+                    No orders ready
+                </h2>
+
+            </div>
+
+        @endforelse
 
     </div>
 
@@ -270,45 +279,56 @@
 
 <script>
 
+    // Clock
+
     function updateClock()
     {
-        document.getElementById('clock').textContent =
+        const clock =
+            document.getElementById('clock');
+
+        if (!clock) {
+            return;
+        }
+
+        clock.textContent =
             new Date().toLocaleTimeString();
     }
 
     updateClock();
 
-    setInterval(updateClock, 1000);
+    setInterval(
+        updateClock,
+        1000
+    );
 
-    if (window.Echo)
-    {
-        window.Echo
-            .channel('helabojun.queue')
-            .listen(
-                '.kitchen.ticket.updated',
-                function ()
-                {
-                    refreshQueue();
-                }
-            );
-    }
+
+    // Queue refresh
 
     async function refreshQueue()
     {
-        try
-        {
-            const response =
-                await fetch(
-                    '{{ route('queue.display.data') }}',
-                    {
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    }
+        try {
+
+            const response = await fetch(
+                '{{ route('queue.display.data') }}',
+                {
+                    method: 'GET',
+
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+
+                    cache: 'no-store'
+                }
+            );
+
+            if (!response.ok) {
+
+                console.error(
+                    'Queue API error:',
+                    response.status
                 );
 
-            if (!response.ok)
-            {
                 return;
             }
 
@@ -318,14 +338,22 @@
             const queueGrid =
                 document.getElementById('queueGrid');
 
+            if (!queueGrid) {
+                return;
+            }
+
             if (
                 !data.orders ||
                 data.orders.length === 0
-            )
-            {
+            ) {
+
                 queueGrid.innerHTML = `
                     <div class="col-12 empty">
-                        <h2>No orders ready</h2>
+
+                        <h2>
+                            No orders ready
+                        </h2>
+
                     </div>
                 `;
 
@@ -333,49 +361,113 @@
             }
 
             queueGrid.innerHTML =
-                data.orders.map(
-                    function(order)
-                    {
-                        return `
-                            <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                data.orders.map(function(order)
+                {
 
-                                <div class="token-card">
+                    return `
 
-                                    <div class="counter-label">
-                                        COUNTER
-                                    </div>
+                        <div
+                            class="col-6 col-md-4 col-lg-3 col-xl-2"
+                            data-queue-id="${order.queue_display_id}"
+                        >
 
-                                    <div class="counter-number">
-                                        ${order.counter ?? '—'}
-                                    </div>
+                            <div class="token-card">
 
-                                    <div class="token-label">
-                                        TOKEN
-                                    </div>
-
-                                    <div class="token">
-                                        ${order.token ?? '—'}
-                                    </div>
-
-                                    <span class="status ready">
-                                        READY
-                                    </span>
-
+                                <div class="token-label">
+                                    TOKEN
                                 </div>
 
+                                <div class="token">
+                                    ${order.token ?? '—'}
+                                </div>
+
+                                <span class="status ready">
+                                    READY
+                                </span>
+
                             </div>
-                        `;
-                    }
-                ).join('');
+
+                        </div>
+
+                    `;
+
+                }).join('');
+
         }
+
         catch (error)
         {
+
             console.error(
                 'Queue refresh error:',
                 error
             );
+
         }
     }
+
+
+    // WebSocket
+
+    function connectQueueWebSocket()
+    {
+
+        if (!window.Echo)
+        {
+
+            console.warn(
+                'Laravel Echo is not available.'
+            );
+
+            return;
+        }
+
+        console.log(
+            'Connecting to Queue WebSocket...'
+        );
+
+        window.Echo
+            .channel('helabojun.queue')
+            .listen(
+                '.kitchen.ticket.updated',
+                function(event)
+                {
+
+                    console.log(
+                        'QUEUE UPDATE RECEIVED:',
+                        event
+                    );
+
+                    refreshQueue();
+
+                }
+            );
+
+        console.log(
+            'Queue WebSocket listener attached.'
+        );
+
+    }
+
+
+    // Page load
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        function()
+        {
+
+            refreshQueue();
+
+            connectQueueWebSocket();
+
+            setInterval(
+                refreshQueue,
+                2000
+            );
+
+        }
+    );
 
 </script>
 

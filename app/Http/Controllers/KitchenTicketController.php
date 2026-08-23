@@ -5,110 +5,285 @@ namespace App\Http\Controllers;
 use App\Models\KitchenTicket;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Counter;
 use Illuminate\Http\Request;
 
 class KitchenTicketController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $kitchenTickets = KitchenTicket::with([
-        'order',
-        'chef'
-    ])->get();
+            'order',
+            'counter',
+            'chef'
+        ])
+            ->latest()
+            ->get();
 
-    return view('kitchen_tickets.index', compact('kitchenTickets'));
+        return view(
+            'kitchen_tickets.index',
+            compact('kitchenTickets')
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $orders = Order::all();
+        $orders = Order::with([
+            'orderItems.counter'
+        ])
+            ->latest()
+            ->get();
 
-    $chefs = User::where('role', 'chef')->get();
+        $chefs = User::where(
+            'role',
+            'chef'
+        )->get();
 
-    return view('kitchen_tickets.create', compact('orders', 'chefs'));
+        $counters = Counter::where(
+            'status',
+            'active'
+        )
+            ->orderBy('counter_number')
+            ->get();
+
+        return view(
+            'kitchen_tickets.create',
+            compact(
+                'orders',
+                'chefs',
+                'counters'
+            )
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-         $request->validate([
-        'order_id' => 'required',
-        'chef_id' => 'nullable',
-        'status' => 'required',
-    ]);
+        $request->validate([
+            'order_id' => [
+                'required',
+                'exists:orders,id'
+            ],
 
-    KitchenTicket::create([
-        'order_id' => $request->order_id,
-        'chef_id' => $request->chef_id,
-        'status' => $request->status,
-    ]);
+            'counter_id' => [
+                'required',
+                'exists:counters,id'
+            ],
 
-    return redirect()->route('kitchen-tickets.index');
+            'chef_id' => [
+                'nullable',
+                'exists:users,id'
+            ],
+
+            'status' => [
+                'required'
+            ],
+        ]);
+
+        $order = Order::findOrFail(
+            $request->order_id
+        );
+
+        $counter = Counter::findOrFail(
+            $request->counter_id
+        );
+
+        if (
+            (int) $order->outlet_id !==
+            (int) $counter->outlet_id
+        ) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'counter_id' =>
+                        'Counter does not belong to this outlet.'
+                ]);
+        }
+
+        $existingTicket = KitchenTicket::where(
+            'order_id',
+            $order->id
+        )
+            ->where(
+                'counter_id',
+                $counter->id
+            )
+            ->first();
+
+        if ($existingTicket) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'counter_id' =>
+                        'This order already has a kitchen ticket for this counter.'
+                ]);
+        }
+
+        KitchenTicket::create([
+            'order_id' => $order->id,
+            'counter_id' => $counter->id,
+            'chef_id' => $request->chef_id,
+            'status' => $request->status,
+        ]);
+
+        return redirect()
+            ->route('kitchen-tickets.index')
+            ->with(
+                'success',
+                'Kitchen ticket created successfully.'
+            );
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $kitchenTicket = KitchenTicket::with([
-        'order',
-        'chef'
-    ])->findOrFail($id);
+            'order',
+            'counter',
+            'chef'
+        ])
+            ->findOrFail($id);
 
-    return view('kitchen_tickets.show', compact('kitchenTicket'));
+        return view(
+            'kitchen_tickets.show',
+            compact('kitchenTicket')
+        );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $kitchenTicket = KitchenTicket::findOrFail($id);
+        $kitchenTicket = KitchenTicket::findOrFail(
+            $id
+        );
 
-    $orders = Order::all();
+        $orders = Order::with([
+            'orderItems.counter'
+        ])
+            ->latest()
+            ->get();
 
-    $chefs = User::where('role', 'chef')->get();
+        $chefs = User::where(
+            'role',
+            'chef'
+        )->get();
 
-    return view('kitchen_tickets.edit', compact(
-        'kitchenTicket',
-        'orders',
-        'chefs'
-    ));
+        $counters = Counter::where(
+            'status',
+            'active'
+        )
+            ->orderBy('counter_number')
+            ->get();
+
+        return view(
+            'kitchen_tickets.edit',
+            compact(
+                'kitchenTicket',
+                'orders',
+                'chefs',
+                'counters'
+            )
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $kitchenTicket = KitchenTicket::findOrFail($id);
+    public function update(
+        Request $request,
+        string $id
+    ) {
+        $request->validate([
+            'order_id' => [
+                'required',
+                'exists:orders,id'
+            ],
 
-    $kitchenTicket->update([
-        'chef_id' => $request->chef_id,
-        'status' => $request->status,
-    ]);
+            'counter_id' => [
+                'required',
+                'exists:counters,id'
+            ],
 
-    return redirect()->route('kitchen-tickets.index');
+            'chef_id' => [
+                'nullable',
+                'exists:users,id'
+            ],
+
+            'status' => [
+                'required'
+            ],
+        ]);
+
+        $kitchenTicket = KitchenTicket::findOrFail(
+            $id
+        );
+
+        $order = Order::findOrFail(
+            $request->order_id
+        );
+
+        $counter = Counter::findOrFail(
+            $request->counter_id
+        );
+
+        if (
+            (int) $order->outlet_id !==
+            (int) $counter->outlet_id
+        ) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'counter_id' =>
+                        'Counter does not belong to this outlet.'
+                ]);
+        }
+
+        $duplicate = KitchenTicket::where(
+            'order_id',
+            $order->id
+        )
+            ->where(
+                'counter_id',
+                $counter->id
+            )
+            ->where(
+                'id',
+                '!=',
+                $kitchenTicket->id
+            )
+            ->exists();
+
+        if ($duplicate) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'counter_id' =>
+                        'This order already has a kitchen ticket for this counter.'
+                ]);
+        }
+
+        $kitchenTicket->update([
+            'order_id' => $order->id,
+            'counter_id' => $counter->id,
+            'chef_id' => $request->chef_id,
+            'status' => $request->status,
+        ]);
+
+        return redirect()
+            ->route('kitchen-tickets.index')
+            ->with(
+                'success',
+                'Kitchen ticket updated successfully.'
+            );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $kitchenTicket = KitchenTicket::findOrFail($id);
+        $kitchenTicket = KitchenTicket::findOrFail(
+            $id
+        );
 
-    $kitchenTicket->delete();
+        $kitchenTicket->delete();
 
-    return redirect()->route('kitchen-tickets.index');
+        return redirect()
+            ->route('kitchen-tickets.index')
+            ->with(
+                'success',
+                'Kitchen ticket deleted successfully.'
+            );
     }
 }

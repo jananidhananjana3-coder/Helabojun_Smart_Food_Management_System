@@ -28,7 +28,7 @@ class ReportController extends Controller
             'counter',
             'orderItems.food',
             'payment',
-            'kitchenTicket',
+            'kitchenTickets',
         ])
         ->whereBetween('created_at', [
             $from . ' 00:00:00',
@@ -76,7 +76,7 @@ class ReportController extends Controller
             $chefId = $request->integer('chef_id');
 
             $query->whereHas(
-                'kitchenTicket',
+                'kitchenTickets',
                 function ($q) use ($chefId) {
                     $q->where(
                         'chef_id',

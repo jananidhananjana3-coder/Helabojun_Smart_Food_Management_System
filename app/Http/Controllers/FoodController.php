@@ -20,10 +20,10 @@ class FoodController extends Controller
         $foods = Food::with([
             'category',
             'outlet',
-            'counters'
+            'counters',
         ])
-        ->latest()
-        ->get();
+            ->latest()
+            ->get();
 
         return view(
             'foods.index',
@@ -31,20 +31,26 @@ class FoodController extends Controller
         );
     }
 
-
     /**
      * Show create food form.
      */
     public function create()
     {
-        $categories = Category::orderBy('category_name')
-            ->get();
+        $categories = Category::orderBy(
+            'category_name'
+        )->get();
 
-        $outlets = Outlet::where('status', 'active')
+        $outlets = Outlet::where(
+            'status',
+            'active'
+        )
             ->orderBy('outlet_name')
             ->get();
 
-        $counters = Counter::where('status', 'active')
+        $counters = Counter::where(
+            'status',
+            'active'
+        )
             ->orderBy('outlet_id')
             ->orderBy('counter_number')
             ->get();
@@ -56,9 +62,11 @@ class FoodController extends Controller
                 'outlets',
                 'counters'
             )
-        )->with('editing', false);
+        )->with(
+            'editing',
+            false
+        );
     }
-
 
     /**
      * Store a new food.
@@ -66,7 +74,6 @@ class FoodController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-
             'category_id' =>
                 'required|exists:categories,id',
 
@@ -89,72 +96,53 @@ class FoodController extends Controller
                 'required|array|min:1',
 
             'counter_quantities.*' =>
-                'required|integer|min:0',
+                'nullable|integer|min:0',
         ]);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Validate counters
-        |--------------------------------------------------------------------------
-        */
+        $counterIds = array_keys(
+            $data['counter_quantities']
+        );
 
         $validCounters = Counter::where(
                 'outlet_id',
                 $data['outlet_id']
             )
             ->where('status', 'active')
-            ->whereIn(
-                'id',
-                array_keys($data['counter_quantities'])
-            )
+            ->whereIn('id', $counterIds)
             ->pluck('id')
+            ->map(fn ($id) => (string) $id)
             ->all();
 
+        $requestedCounters = array_map(
+            'strval',
+            $counterIds
+        );
 
-        if (
-            count($validCounters) !==
-            count($data['counter_quantities'])
-        ) {
+        sort($validCounters);
+        sort($requestedCounters);
 
+        if ($validCounters !== $requestedCounters) {
             return back()
                 ->withErrors([
                     'counter_quantities' =>
-                        'Select only active counters belonging to the selected outlet.'
+                        'Select only active counters belonging to the selected outlet.',
                 ])
                 ->withInput();
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Upload image
-        |--------------------------------------------------------------------------
-        */
-
         $image = null;
 
         if ($request->hasFile('image')) {
-
             $image = $request
                 ->file('image')
                 ->store('foods', 'public');
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Create food + counter quantities
-        |--------------------------------------------------------------------------
-        */
-
         DB::transaction(function () use (
             $data,
             $image
         ) {
-
             $food = Food::create([
-
                 'category_id' =>
                     $data['category_id'],
 
@@ -171,8 +159,7 @@ class FoodController extends Controller
                     $data['price'],
 
                 /*
-                 * Admin does NOT control operational quantity.
-                 * Chef controls quantity per counter.
+                 * Admin does not control operational stock.
                  */
                 'available_quantity' => 0,
 
@@ -180,33 +167,31 @@ class FoodController extends Controller
                     $image,
             ]);
 
-
+            /*
+             * Every newly assigned counter starts at 0.
+             * Chef controls the operational quantity.
+             */
             $sync = [];
 
             foreach (
                 $data['counter_quantities']
                 as $counterId => $quantity
             ) {
-
                 $sync[$counterId] = [
-                    'quantity' =>
-                        (int) $quantity
+                    'quantity' => 0,
                 ];
             }
 
-
             $food->counters()->sync($sync);
         });
-
 
         return redirect()
             ->route('foods.index')
             ->with(
                 'success',
-                'Food created successfully. Operational quantity is controlled by the chef per counter.'
+                'Food created successfully. The chef controls operational quantity per counter.'
             );
     }
-
 
     /**
      * Show a single food.
@@ -216,7 +201,7 @@ class FoodController extends Controller
         $food->load([
             'category',
             'outlet',
-            'counters'
+            'counters',
         ]);
 
         return view(
@@ -225,7 +210,6 @@ class FoodController extends Controller
         );
     }
 
-
     /**
      * Show edit food form.
      */
@@ -233,11 +217,9 @@ class FoodController extends Controller
     {
         $food->load('counters');
 
-
         $categories = Category::orderBy(
             'category_name'
         )->get();
-
 
         $outlets = Outlet::where(
                 'status',
@@ -246,21 +228,16 @@ class FoodController extends Controller
             ->orderBy('outlet_name')
             ->get();
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Only active counters belonging to current outlet
-        |--------------------------------------------------------------------------
-        */
-
         $counters = Counter::where(
                 'outlet_id',
                 $food->outlet_id
             )
-            ->where('status', 'active')
+            ->where(
+                'status',
+                'active'
+            )
             ->orderBy('counter_number')
             ->get();
-
 
         return view(
             'foods.create',
@@ -276,7 +253,6 @@ class FoodController extends Controller
         );
     }
 
-
     /**
      * Update an existing food.
      */
@@ -284,9 +260,7 @@ class FoodController extends Controller
         Request $request,
         Food $food
     ) {
-
         $data = $request->validate([
-
             'category_id' =>
                 'required|exists:categories,id',
 
@@ -309,77 +283,61 @@ class FoodController extends Controller
                 'required|array|min:1',
 
             'counter_quantities.*' =>
-                'required|integer|min:0',
+                'nullable|integer|min:0',
         ]);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Validate selected counters
-        |--------------------------------------------------------------------------
-        */
+        $counterIds = array_keys(
+            $data['counter_quantities']
+        );
 
         $validCounters = Counter::where(
                 'outlet_id',
                 $data['outlet_id']
             )
-            ->where('status', 'active')
+            ->where(
+                'status',
+                'active'
+            )
             ->whereIn(
                 'id',
-                array_keys($data['counter_quantities'])
+                $counterIds
             )
             ->pluck('id')
+            ->map(fn ($id) => (string) $id)
             ->all();
 
+        $requestedCounters = array_map(
+            'strval',
+            $counterIds
+        );
 
-        if (
-            count($validCounters) !==
-            count($data['counter_quantities'])
-        ) {
+        sort($validCounters);
+        sort($requestedCounters);
 
+        if ($validCounters !== $requestedCounters) {
             return back()
                 ->withErrors([
                     'counter_quantities' =>
-                        'Select only active counters belonging to the selected outlet.'
+                        'Select only active counters belonging to the selected outlet.',
                 ])
                 ->withInput();
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update image
-        |--------------------------------------------------------------------------
-        */
+        $oldImage = $food->image;
+        $newImage = null;
 
         if ($request->hasFile('image')) {
-
-            if ($food->image) {
-
-                Storage::disk('public')
-                    ->delete($food->image);
-            }
-
-
-            $food->image = $request
+            $newImage = $request
                 ->file('image')
                 ->store('foods', 'public');
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update food + counter quantities
-        |--------------------------------------------------------------------------
-        */
-
         DB::transaction(function () use (
             $food,
-            $data
+            $data,
+            $newImage
         ) {
-
             $food->update([
-
                 'category_id' =>
                     $data['category_id'],
 
@@ -394,37 +352,62 @@ class FoodController extends Controller
 
                 'price' =>
                     $data['price'],
+
+                'image' =>
+                    $newImage ?? $food->image,
             ]);
 
+            /*
+             * Preserve existing Chef quantities.
+             *
+             * Existing counter:
+             *     keep current quantity.
+             *
+             * New counter:
+             *     start at 0.
+             *
+             * Removed counter:
+             *     detach.
+             */
+            $currentPivot = DB::table('food_counter')
+                ->where(
+                    'food_id',
+                    $food->id
+                )
+                ->pluck(
+                    'quantity',
+                    'counter_id'
+                )
+                ->toArray();
 
             $sync = [];
 
             foreach (
-                $data['counter_quantities']
-                as $counterId => $quantity
+                array_keys(
+                    $data['counter_quantities']
+                ) as $counterId
             ) {
-
                 $sync[$counterId] = [
                     'quantity' =>
-                        (int) $quantity
+                        isset(
+                            $currentPivot[$counterId]
+                        )
+                            ? (int) $currentPivot[$counterId]
+                            : 0,
                 ];
             }
-
 
             $food->counters()->sync($sync);
         });
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Save image change
-        |--------------------------------------------------------------------------
-        */
-
-        if ($food->isDirty('image')) {
-            $food->save();
+        if (
+            $newImage &&
+            $oldImage &&
+            $oldImage !== $newImage
+        ) {
+            Storage::disk('public')
+                ->delete($oldImage);
         }
-
 
         return redirect()
             ->route('foods.index')
@@ -434,30 +417,19 @@ class FoodController extends Controller
             );
     }
 
-
     /**
      * Delete a food.
      */
     public function destroy(Food $food)
     {
         if ($food->image) {
-
             Storage::disk('public')
                 ->delete($food->image);
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Remove counter assignments first
-        |--------------------------------------------------------------------------
-        */
-
         $food->counters()->detach();
 
-
         $food->delete();
-
 
         return back()
             ->with(

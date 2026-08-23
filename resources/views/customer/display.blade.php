@@ -398,6 +398,7 @@
             const pusher = new Pusher(
                 @json(env('REVERB_APP_KEY')),
                 {
+                    cluster: 'mt1',
 
                     wsHost: @json(
                         env('REVERB_HOST', '127.0.0.1')
@@ -434,7 +435,7 @@
             */
 
             const inventoryChannel =
-                pusher.subscribe('inventory');
+                pusher.subscribe('helabojun.inventory');
 
 
             /*

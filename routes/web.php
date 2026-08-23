@@ -18,13 +18,25 @@ use App\Http\Controllers\ChefController;
 use App\Http\Controllers\ReportController;
 
 
-// Home Page
+// Public Pages
+
 Route::get('/', function () {
     return view('index');
-});
+})->name('home');
 
+Route::get('/locations', function () {
+    return view('locations');
+})->name('public.locations');
 
-// Authenticated Routes
+Route::get('/about', function () {
+    return view('about');
+})->name('public.about');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('public.contact');
+
+// Authenticated
 Route::middleware('auth')->group(function () {
 
     // Admin Dashboard
@@ -55,10 +67,16 @@ Route::middleware('auth')->group(function () {
 
 
     // Default Dashboard
-    Route::get('/dashboard', function () {
-        return redirect()->route('admin.dashboard');
-    })->name('dashboard');
+   Route::get('/dashboard', function () {
+    $user = auth()->user();
 
+    return match ($user->role) {
+        'admin', 'manager' => redirect()->route('admin.dashboard'),
+        'cashier' => redirect()->route('cashier.dashboard'),
+        'chef' => redirect()->route('chef.dashboard'),
+        default => abort(403, 'Unauthorized access.'),
+    };
+})->name('dashboard');
 
     // Profile
     Route::get(
@@ -77,17 +95,17 @@ Route::middleware('auth')->group(function () {
     )->name('profile.destroy');
 
 
-    // Admin and Manager Routes
+    // Admin + Manager
     Route::middleware('role:admin,manager')->group(function () {
 
-        // Outlet Management
+        // Outlets
         Route::resource(
             'outlets',
             OutletController::class
         );
 
 
-        // Counter Management
+        // Counters
         Route::resource(
             'counters',
             CounterController::class
@@ -96,49 +114,42 @@ Route::middleware('auth')->group(function () {
         ]);
 
 
-        // Food Management
+        // Foods
         Route::resource(
             'foods',
             FoodController::class
         );
 
 
-        // Category Management
+        // Categories
         Route::resource(
             'categories',
             CategoryController::class
         );
 
 
-        // Order Management
-        Route::resource(
-            'orders',
-            OrderController::class
-        );
-
-
-        // Payment Management
+        // Payments
         Route::resource(
             'payments',
             PaymentController::class
         );
 
 
-        // Kitchen Ticket Management
+        // Kitchen Tickets
         Route::resource(
             'kitchen-tickets',
             KitchenTicketController::class
         );
 
 
-        // User Management
+        // Users
         Route::resource(
             'users',
             UserController::class
         );
 
 
-        // Admin Staff Management
+        // Staff
         Route::prefix('admin')
             ->name('admin.')
             ->group(function () {
@@ -156,14 +167,13 @@ Route::middleware('auth')->group(function () {
             '/reports',
             [ReportController::class, 'index']
         )->name('reports.index');
-
     });
 
 
-    // Cashier Routes
+    // Cashier
     Route::middleware('role:cashier')->group(function () {
 
-        // Store Cashier Order
+        // Create Order
         Route::post(
             '/cashier/orders',
             [OrderController::class, 'cashierStore']
@@ -177,40 +187,44 @@ Route::middleware('auth')->group(function () {
         )->name('cashier.orders.receipt');
 
 
-        // Kitchen Order Ticket
+        // KOT
         Route::get(
             '/cashier/orders/{order}/kot',
             [OrderController::class, 'kot']
         )->name('cashier.orders.kot');
-
     });
 
 
-    // Chef Routes
+    // Chef
     Route::middleware('role:chef')->group(function () {
 
-        // Update Food Quantity
+        // Food Quantity
         Route::patch(
             '/chef/foods/{food}/quantity',
             [ChefController::class, 'updateFoodQuantity']
         )->name('chef.foods.quantity');
 
 
-        // Update Chef Order Status
+        // Order Status
         Route::patch(
             '/chef/orders/{order}/status',
             [ChefController::class, 'updateOrderStatus']
         )->name('chef.orders.status');
 
 
-        // Chef Dashboard Data
+        // Complete Order
+        Route::post(
+            '/chef/orders/{order}/complete',
+            [ChefController::class, 'completeOrder']
+        )->name('chef.orders.complete');
+
+
+        // Chef Data
         Route::get(
             '/chef/data',
             [ChefController::class, 'data']
         )->name('chef.data');
-
     });
-
 });
 
 
@@ -220,8 +234,6 @@ Route::get(
     [CustomerDisplayController::class, 'index']
 )->name('customer.display');
 
-
-// Customer Display Data
 Route::get(
     '/customer-display/data',
     [CustomerDisplayController::class, 'data']
@@ -234,15 +246,13 @@ Route::get(
     [QueueDisplayController::class, 'index']
 )->name('queue.display');
 
-
-// Queue Display Data
 Route::get(
     '/queue-display/data',
     [QueueDisplayController::class, 'data']
 )->name('queue.display.data');
 
 
-// Language Change
+// Language
 Route::get(
     '/language/{lang}',
     function ($lang) {
@@ -262,10 +272,9 @@ Route::get(
         );
 
         return back();
-
     }
 )->name('language');
 
 
-// Authentication Routes
+// Authentication
 require __DIR__ . '/auth.php';

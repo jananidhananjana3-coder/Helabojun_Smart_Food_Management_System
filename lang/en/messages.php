@@ -24,4 +24,7 @@ return [
 
     'calendar'=>'Calendar',
 
+    'welcome_admin'=>'Welcome Admin',
+    'system_name'=>'Hela Bojun Smart Food Service and Inventory Management System',
+
 ];

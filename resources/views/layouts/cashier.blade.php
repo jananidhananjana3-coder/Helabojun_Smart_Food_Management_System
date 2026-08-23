@@ -332,43 +332,36 @@
         </a>
 
 
-        <!-- Orders -->
-
-        <a href="#">
-
-            <i class="fa fa-receipt"></i>
-
-            <span class="nav-text">
-                Orders
-            </span>
-
-        </a>
-
+        
 
         <!-- Queue -->
 
-        <a href="#">
+        <!-- Queue -->
 
-            <i class="fa fa-list-ol"></i>
+<a
+    href="{{ route('queue.display') }}"
+    class="{{ request()->routeIs('queue.display') ? 'active' : '' }}"
+>
+    <i class="fa fa-list-ol"></i>
 
-            <span class="nav-text">
-                Queue
-            </span>
-
-        </a>
+    <span class="nav-text">
+        Queue
+    </span>
+</a>
 
 
         <!-- Profile -->
 
-        <a href="#">
+        <a
+    href="{{ route('profile.edit') }}"
+    class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}"
+>
+    <i class="fa fa-user"></i>
 
-            <i class="fa fa-user"></i>
-
-            <span class="nav-text">
-                My Profile
-            </span>
-
-        </a>
+    <span class="nav-text">
+        My Profile
+    </span>
+</a>
 
 
         <!-- Logout -->
